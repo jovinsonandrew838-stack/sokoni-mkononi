@@ -26,6 +26,7 @@ import { MarketplaceCheckoutModal } from './components/Marketplace/MarketplaceCh
 import { PayoutModal } from './components/Dashboard/PayoutModal';
 import { AddVendorModal } from './components/Vendors/AddVendorModal';
 import { WebsiteEmbedModal } from './components/Dashboard/WebsiteEmbedModal';
+import { GitHubSyncModal } from './components/GitHub/GitHubSyncModal';
 import { generateRef } from './utils/formatters';
 import { sound } from './utils/audio';
 
@@ -61,6 +62,7 @@ export default function App() {
   const [isPayoutOpen, setIsPayoutOpen] = useState(false);
   const [isAddVendorOpen, setIsAddVendorOpen] = useState(false);
   const [isEmbedOpen, setIsEmbedOpen] = useState(false);
+  const [isGitHubOpen, setIsGitHubOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('soko_vendors', JSON.stringify(vendors));
@@ -175,6 +177,7 @@ export default function App() {
         setCurrency={setCurrency}
         onOpenEmbedModal={() => setIsEmbedOpen(true)}
         onOpenPayoutModal={() => setIsPayoutOpen(true)}
+        onOpenGitHubModal={() => setIsGitHubOpen(true)}
         onSimulateOrder={handleSimulateRandomOrder}
         totalCommission5PctTZS={availableCommissionTZS}
       />
@@ -250,6 +253,13 @@ export default function App() {
         />
       )}
 
+      {isGitHubOpen && (
+        <GitHubSyncModal
+          onClose={() => setIsGitHubOpen(false)}
+          lang={lang}
+        />
+      )}
+
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white py-8 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -262,6 +272,13 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-4 text-[11px]">
+            <button
+              onClick={() => setIsGitHubOpen(true)}
+              className="hover:text-slate-800 cursor-pointer flex items-center gap-1 font-semibold text-slate-700"
+            >
+              <span>GitHub: sokoni-mkononi</span>
+            </button>
+            <span aria-hidden="true">·</span>
             <button
               onClick={() => setIsEmbedOpen(true)}
               className="hover:text-slate-800 cursor-pointer"
