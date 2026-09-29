@@ -27,8 +27,10 @@
    - Usafirishaji mlangoni ndani ya masaa 1 - 2 kwa Dar es Salaam (Kigamboni, Ilala, Kinondoni, Temeke, Ubungo) na mikoa ya Arusha, Mwanza, Dodoma na Zanzibar.
 3. **Malipo Salama:**
    - Lipa kirahisi kupitia M-Pesa, Tigo Pesa, Airtel Money, HaloPesa au Lipa Unapopokea (Cash on Delivery).
-4. **Usajili wa Wafanyabiashara wa Masokoni:**
-   - Wamiliki wa meza na magenge masokoni wanaweza kujisajili na kuanza kuuza kidijitali.
+4. **Vifurushi vya Malipo ya Kila Mwezi kwa Wafanyabiashara:**
+   - **Kifurushi cha Msingi (TZS 2,000 / mwezi):** Kuweka hadi bidhaa 10 mtandaoni, kupokea oda moja kwa moja kwa SMS/WhatsApp, na malipo ya papo hapo simuni.
+   - **Biashara Plus / Fedha (TZS 5,000 / mwezi - Maarufu):** Kuweka hadi bidhaa 35, Alama ya Duka Lililothibitishwa (Verified ✓), kuonekana juu kwenye orodha ya masoko, na ripoti za mauzo.
+   - **VIP Mfanyabiashara Mkubwa (TZS 10,000 / mwezi):** Bidhaa bila kikomo, Baji ya Dhahabu (Gold VIP ⭐), Tangazo maalum juu ya tovuti (Featured banner), dereva wa kipaumbele (VIP dispatch), na msimamizi maalum wa akaunti.
 5. **Mapishi ya Soko:**
    - Miongozo ya kuandaa vyakula vya asili kama Supu Nzito ya Kuku wa Kienyeji na Ndizi, Wali wa Nazi na Samaki Sato, na Ugali wa Sembe.
 

@@ -12,11 +12,12 @@ import { ImageCustomizerModal } from './components/ImageCustomizerModal';
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
 import { VendorRegistrationModal } from './components/VendorRegistrationModal';
+import { PackagesModal } from './components/PackagesModal';
 import { RecipesSection } from './components/RecipesSection';
 import { ReviewsSection } from './components/ReviewsSection';
 import { Footer } from './components/Footer';
 import { PRODUCTS, DELIVERY_ZONES, DeliveryZone, Product } from './data/products';
-import { CartItem, Language, OrderDetails, Vendor } from './types';
+import { CartItem, Language, OrderDetails, PackageTier, Vendor } from './types';
 import { Sparkles, SlidersHorizontal, RefreshCw, CheckCircle2, ShoppingBag, MessageCircle } from 'lucide-react';
 
 export default function App() {
@@ -39,8 +40,11 @@ export default function App() {
       registeredAt: '2026-09-20',
       status: 'active',
       productsCount: 12,
+      subscriptionPlan: 'pro',
+      subscriptionPriceTZS: 5000,
+      subscriptionBillingCycle: 'monthly',
       registrationFeePaid: true,
-      registrationFeeTZS: 2000,
+      registrationFeeTZS: 5000,
       paymentMethod: 'mpesa',
       paymentRef: 'MP260920.0911.A1',
     },
@@ -56,8 +60,11 @@ export default function App() {
       registeredAt: '2026-09-22',
       status: 'active',
       productsCount: 8,
+      subscriptionPlan: 'vip',
+      subscriptionPriceTZS: 10000,
+      subscriptionBillingCycle: 'monthly',
       registrationFeePaid: true,
-      registrationFeeTZS: 2000,
+      registrationFeeTZS: 10000,
       paymentMethod: 'tigopesa',
       paymentRef: 'TP260922.1402.B2',
     },
@@ -69,6 +76,8 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isVendorModalOpen, setIsVendorModalOpen] = useState(false);
+  const [isPackagesModalOpen, setIsPackagesModalOpen] = useState(false);
+  const [preselectedTier, setPreselectedTier] = useState<PackageTier>('starter');
   const [notification, setNotification] = useState<string | null>(null);
 
   // Cart operations
@@ -244,7 +253,11 @@ export default function App() {
         onOpenCart={() => setIsCartOpen(true)}
         selectedZone={selectedZone}
         onSelectZone={setSelectedZone}
-        onOpenVendorModal={() => setIsVendorModalOpen(true)}
+        onOpenVendorModal={() => {
+          setPreselectedTier('starter');
+          setIsVendorModalOpen(true);
+        }}
+        onOpenPackagesModal={() => setIsPackagesModalOpen(true)}
         vendorsCount={registeredVendors.length}
       />
 
@@ -254,7 +267,11 @@ export default function App() {
           language={language}
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
-          onOpenVendorModal={() => setIsVendorModalOpen(true)}
+          onOpenVendorModal={() => {
+            setPreselectedTier('starter');
+            setIsVendorModalOpen(true);
+          }}
+          onOpenPackagesModal={() => setIsPackagesModalOpen(true)}
           vendorsCount={registeredVendors.length}
         />
 
@@ -373,19 +390,31 @@ export default function App() {
         onUpdateProductImage={handleUpdateProductImage}
       />
 
-      {/* Market Vendor Registration Modal */}
+      {/* Market Vendor Registration Modal with Packages */}
       <VendorRegistrationModal
         isOpen={isVendorModalOpen}
         onClose={() => setIsVendorModalOpen(false)}
         language={language}
         existingVendorsCount={registeredVendors.length}
+        initialPackageTier={preselectedTier}
         onRegisterVendor={(newVendor) => {
           setRegisteredVendors((prev) => [newVendor, ...prev]);
           triggerNotification(
             language === 'sw'
-              ? `Biashara yako ya "${newVendor.businessName}" imesajiliwa kikamilifu!`
-              : `Your stall "${newVendor.businessName}" was successfully registered!`
+              ? `Biashara yako ya "${newVendor.businessName}" imesajiliwa na kifurushi cha TZS ${newVendor.subscriptionPriceTZS.toLocaleString()}/mwezi kiko hewani!`
+              : `Your stall "${newVendor.businessName}" is now active on the TZS ${newVendor.subscriptionPriceTZS.toLocaleString()}/mo plan!`
           );
+        }}
+      />
+
+      {/* Monthly Packages Modal */}
+      <PackagesModal
+        isOpen={isPackagesModalOpen}
+        onClose={() => setIsPackagesModalOpen(false)}
+        language={language}
+        onSelectPackage={(tier) => {
+          setPreselectedTier(tier);
+          setIsVendorModalOpen(true);
         }}
       />
 

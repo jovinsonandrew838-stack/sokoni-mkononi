@@ -22,6 +22,22 @@ export interface OrderDetails {
   createdAt: string;
 }
 
+export type PackageTier = 'starter' | 'pro' | 'vip';
+
+export interface VendorPackage {
+  id: PackageTier;
+  priceTZS: number; // 2000, 5000, 10000
+  titleSw: string;
+  titleEn: string;
+  taglineSw: string;
+  taglineEn: string;
+  popular?: boolean;
+  maxProducts: number;
+  featuresSw: string[];
+  featuresEn: string[];
+  badgeColor: string;
+}
+
 export interface Vendor {
   id: string;
   businessName: string;
@@ -34,6 +50,11 @@ export interface Vendor {
   registeredAt: string;
   status: 'active' | 'pending';
   productsCount: number;
+  
+  // Vifurushi vya Kila Mwezi
+  subscriptionPlan: PackageTier;
+  subscriptionPriceTZS: number; // 2000, 5000, 10000
+  subscriptionBillingCycle: 'monthly';
   registrationFeePaid: boolean;
   registrationFeeTZS: number;
   paymentMethod?: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Truck, ShieldCheck, Clock, Award, ArrowDown, RefreshCw, HeartHandshake, Store } from 'lucide-react';
+import { Sparkles, Truck, ShieldCheck, Award, HeartHandshake, Store, Layers } from 'lucide-react';
 import { Language } from '../types';
 import { CATEGORIES } from '../data/products';
 import denguImg from '../assets/images/dengu_safi_1790499903949.jpg';
@@ -15,6 +15,7 @@ interface HeroSectionProps {
   selectedCategory: string;
   onSelectCategory: (categoryId: string) => void;
   onOpenVendorModal: () => void;
+  onOpenPackagesModal?: () => void;
   vendorsCount?: number;
 }
 
@@ -23,6 +24,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   selectedCategory,
   onSelectCategory,
   onOpenVendorModal,
+  onOpenPackagesModal,
   vendorsCount = 0,
 }) => {
   return (
@@ -111,142 +113,122 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             </div>
 
-            {/* Small Vendors Registration Prompt Bar */}
+            {/* Small Vendors Registration & Monthly Packages Prompt Bar */}
             <div className="pt-2">
-              <div className="bg-amber-400/15 border border-amber-300/30 rounded-xl p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
+              <div className="bg-amber-400/15 border border-amber-300/30 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-amber-400 text-stone-950 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-amber-400 text-stone-950 flex items-center justify-center shrink-0">
                     <Store className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
+                        {language === 'sw'
+                          ? 'Wafanyabiashara wa Masokoni: Kariakoo, Tandale, Ilala, Buguruni'
+                          : 'Market Vendors: Kariakoo, Tandale, Ilala, Buguruni'}
+                      </h4>
+                      <span className="hidden sm:inline bg-amber-400/90 text-stone-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full">
+                        TZS 2,000 · 5,000 · 10,000
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-stone-300 mt-1">
                       {language === 'sw'
-                        ? 'Una fremu, genge au meza sokoni? (Kariakoo, Tandale n.k.)'
-                        : 'Own a produce stall or market table?'}
-                    </h4>
-                    <p className="text-[11px] text-stone-300 mt-0.5">
-                      {language === 'sw'
-                        ? 'Jisajili kama mfanyabiashara, upate wateja wa mtandaoni na kuongeza mauzo.'
-                        : 'Register your stall for free and receive direct household delivery orders.'}
+                        ? 'Chagua vifurushi vya malipo ya kila mwezi vya kuanzia TZS 2,000, 5,000 (Popular) au 10,000 (VIP) kuweka meza yako hewani.'
+                        : 'Choose monthly vendor packages starting at TZS 2,000, 5,000 or 10,000 to list your stall online.'}
                     </p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={onOpenVendorModal}
-                  className="px-3.5 py-1.5 sm:py-2 bg-amber-400 hover:bg-amber-300 text-stone-950 font-extrabold text-xs rounded-lg transition-all shadow-md shrink-0 flex items-center justify-center gap-1.5 active:scale-95"
-                >
-                  <Store className="w-3.5 h-3.5" />
-                  <span>{language === 'sw' ? 'Jisajili Hapa Bure' : 'Register Stall Free'}</span>
-                </button>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  {onOpenPackagesModal && (
+                    <button
+                      type="button"
+                      onClick={onOpenPackagesModal}
+                      className="px-3 py-2 bg-white/10 hover:bg-white/20 text-white font-bold text-xs rounded-xl transition-all border border-white/20 flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Layers className="w-3.5 h-3.5 text-amber-300" />
+                      <span>{language === 'sw' ? 'Tazama Vifurushi' : 'View Packages'}</span>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={onOpenVendorModal}
+                    className="px-3.5 py-2 bg-amber-400 hover:bg-amber-300 text-stone-950 font-extrabold text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"
+                  >
+                    <Store className="w-3.5 h-3.5" />
+                    <span>{language === 'sw' ? 'Sajili Duka Lako' : 'Register Stall'}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Interactive Feature Visual Card Showcase */}
-          <div className="lg:col-span-5">
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4">
-              <div className="flex items-center justify-between text-xs text-stone-200 border-b border-white/10 pb-3">
-                <span className="font-bold text-amber-300 flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4" />
-                  {language === 'sw' ? 'Utofauti wa Picha (Zero Sameness)' : 'Distinct High-Res Imagery'}
-                </span>
-                <span className="text-[11px] text-stone-300">
-                  {language === 'sw' ? 'Picha 30+ Tofauti' : '30+ Unique Photos'}
-                </span>
+          {/* Right Visual Composition */}
+          <div className="lg:col-span-5 relative mt-4 lg:mt-0">
+            <div className="relative mx-auto max-w-md">
+              {/* Main Feature Highlight Card */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/20 bg-stone-900 group">
+                <img
+                  src={denguImg}
+                  alt="Dengu Safi ya Morogoro"
+                  className="w-full h-64 sm:h-72 object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5 text-left">
+                  <span className="inline-block px-2.5 py-1 rounded-md bg-amber-400 text-stone-950 text-[10px] font-black uppercase tracking-wider mb-1.5">
+                    {language === 'sw' ? 'Mzigo Mpya Leo' : 'Fresh Harvest Today'}
+                  </span>
+                  <h3 className="font-extrabold text-white text-lg sm:text-xl">
+                    {language === 'sw' ? 'Dengu Safi ya Morogoro' : 'Clean Morogoro Green Grams'}
+                  </h3>
+                  <p className="text-stone-300 text-xs mt-1">
+                    {language === 'sw'
+                      ? 'Imepepetwa vizuri, haina kokoto wala vumbi. Kilo 1: TSh 4,500'
+                      : 'Sorted thoroughly, zero grit or stones. 1 KG: TSh 4,500'}
+                  </p>
+                </div>
               </div>
 
-              {/* 6 Distinct Item Photo Previews Grid to clearly demonstrate variety */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                <div className="group relative rounded-xl overflow-hidden aspect-[4/3] bg-stone-900 shadow-sm">
-                  <img
-                    src={tikitiImg}
-                    alt="Tikiti Maji Kubwa"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex flex-col justify-end p-2">
-                    <span className="text-white text-xs font-bold truncate">
-                      {language === 'sw' ? 'Tikiti Maji Halisi' : 'Crisp Watermelon'}
-                    </span>
-                    <span className="text-[10px] text-emerald-300">Chalinze, Pwani</span>
-                  </div>
-                </div>
-
-                <div className="group relative rounded-xl overflow-hidden aspect-[4/3] bg-stone-900 shadow-sm">
-                  <img
-                    src={naziImg}
-                    alt="Nazi Kubwa za Pwani"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex flex-col justify-end p-2">
-                    <span className="text-white text-xs font-bold truncate">
-                      {language === 'sw' ? 'Nazi Halisi ya Pwani' : 'Coastal Coconut'}
-                    </span>
-                    <span className="text-[10px] text-emerald-300">Bagamoyo & Mafia</span>
-                  </div>
-                </div>
-
-                <div className="group relative rounded-xl overflow-hidden aspect-[4/3] bg-stone-900 shadow-sm">
-                  <img
-                    src={samakiSatoImg}
-                    alt="Samaki Sato Wabichi"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex flex-col justify-end p-2">
-                    <span className="text-white text-xs font-bold truncate">
-                      {language === 'sw' ? 'Samaki Sato Wabichi' : 'Fresh Victoria Tilapia'}
-                    </span>
-                    <span className="text-[10px] text-emerald-300">Ziwa Victoria</span>
-                  </div>
-                </div>
-
-                <div className="group relative rounded-xl overflow-hidden aspect-[4/3] bg-stone-900 shadow-sm">
+              {/* Floating Thumbnails Grid representing real unique items */}
+              <div className="grid grid-cols-3 gap-2.5 mt-3">
+                <div className="rounded-2xl overflow-hidden border border-white/20 shadow-md relative group bg-stone-900">
                   <img
                     src={nyamaNgombeImg}
                     alt="Nyama ya Ng'ombe"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-20 sm:h-24 object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex flex-col justify-end p-2">
-                    <span className="text-white text-xs font-bold truncate">
-                      {language === 'sw' ? 'Nyama ya Ng\'ombe' : 'Prime Beef Cuts'}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2">
+                    <span className="text-[10px] font-bold text-white leading-tight">
+                      {language === 'sw' ? "Ng'ombe" : 'Beef'}
                     </span>
-                    <span className="text-[10px] text-emerald-300">Dodoma Bucha</span>
                   </div>
                 </div>
 
-                <div className="group relative rounded-xl overflow-hidden aspect-[4/3] bg-stone-900 shadow-sm">
+                <div className="rounded-2xl overflow-hidden border border-white/20 shadow-md relative group bg-stone-900">
                   <img
-                    src={dagaaImg}
-                    alt="Dagaa wa Kigoma"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    src={samakiSatoImg}
+                    alt="Samaki Sato"
+                    className="w-full h-20 sm:h-24 object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex flex-col justify-end p-2">
-                    <span className="text-white text-xs font-bold truncate">
-                      {language === 'sw' ? 'Dagaa wa Kigoma' : 'Lake Sardines'}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2">
+                    <span className="text-[10px] font-bold text-white leading-tight">
+                      {language === 'sw' ? 'Sato Fresh' : 'Fresh Tilapia'}
                     </span>
-                    <span className="text-[10px] text-emerald-300">Ziwa Tanganyika</span>
                   </div>
                 </div>
 
-                <div className="group relative rounded-xl overflow-hidden aspect-[4/3] bg-stone-900 shadow-sm">
+                <div className="rounded-2xl overflow-hidden border border-white/20 shadow-md relative group bg-stone-900">
                   <img
                     src={asaliImg}
                     alt="Asali ya Tabora"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-20 sm:h-24 object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex flex-col justify-end p-2">
-                    <span className="text-white text-xs font-bold truncate">
-                      {language === 'sw' ? 'Asali Halisi ya Tabora' : 'Raw Wild Honey'}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2">
+                    <span className="text-[10px] font-bold text-white leading-tight">
+                      {language === 'sw' ? 'Asali Halisi' : 'Pure Honey'}
                     </span>
-                    <span className="text-[10px] text-emerald-300">Misitu ya Miombo</span>
                   </div>
                 </div>
-              </div>
-
-              <div className="text-[11px] text-stone-300 text-center leading-normal">
-                {language === 'sw'
-                  ? 'Kila zao lina picha halisi ya kipekee inayolingana na zao hilo lenyewe bila kurudia au kufanana ovyo.'
-                  : 'Every single farm crop is rendered with individual photographic accuracy, avoiding generic duplicate tiles.'}
               </div>
             </div>
           </div>
@@ -258,7 +240,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <button
               type="button"
               onClick={() => onSelectCategory('all')}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
                 selectedCategory === 'all'
                   ? 'bg-amber-400 text-stone-950 shadow-md'
                   : 'bg-white/10 hover:bg-white/20 text-stone-100'
@@ -266,7 +248,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             >
               <span>{language === 'sw' ? 'Mazao Yote' : 'All Products'}</span>
             </button>
-
             {CATEGORIES.map((cat) => {
               const isActive = selectedCategory === cat.id;
               return (
@@ -274,14 +255,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   key={cat.id}
                   type="button"
                   onClick={() => onSelectCategory(cat.id)}
-                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
+                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
                     isActive
                       ? 'bg-emerald-500 text-white shadow-md'
                       : 'bg-white/10 hover:bg-white/20 text-stone-200'
                   }`}
                 >
                   <span>{language === 'sw' ? cat.nameSw : cat.nameEn}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? 'bg-emerald-700 text-white' : 'bg-black/25 text-stone-300'}`}>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isActive ? 'bg-emerald-700 text-white' : 'bg-black/25 text-stone-300'}`}>
                     {cat.count}
                   </span>
                 </button>

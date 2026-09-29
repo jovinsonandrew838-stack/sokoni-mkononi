@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingBag, Search, MapPin, PhoneCall, Globe, X, Store } from 'lucide-react';
+import { ShoppingBag, Search, MapPin, PhoneCall, Globe, X, Store, Sparkles } from 'lucide-react';
 import { Language } from '../types';
 import { DELIVERY_ZONES, DeliveryZone } from '../data/products';
 
@@ -14,6 +14,7 @@ interface NavbarProps {
   selectedZone: DeliveryZone;
   onSelectZone: (zone: DeliveryZone) => void;
   onOpenVendorModal: () => void;
+  onOpenPackagesModal?: () => void;
   vendorsCount: number;
 }
 
@@ -28,6 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   selectedZone,
   onSelectZone,
   onOpenVendorModal,
+  onOpenPackagesModal,
   vendorsCount,
 }) => {
   const [isZoneDropdownOpen, setIsZoneDropdownOpen] = React.useState(false);
@@ -172,11 +174,24 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>{language === 'sw' ? 'SW' : 'EN'}</span>
             </button>
 
+            {/* Packages Trigger Button */}
+            {onOpenPackagesModal && (
+              <button
+                type="button"
+                onClick={onOpenPackagesModal}
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-lg text-xs font-bold transition-all cursor-pointer shadow-xs"
+                title={language === 'sw' ? 'Vifurushi vya malipo vya wauzaji kuanzia TZS 2,000' : 'Vendor monthly packages from TZS 2,000'}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <span>{language === 'sw' ? 'Vifurushi vya Wauzaji' : 'Vendor Packages'}</span>
+              </button>
+            )}
+
             {/* Vendor Registration Button for Small Market Sellers */}
             <button
               type="button"
               onClick={onOpenVendorModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg text-xs font-bold transition-all shadow-xs"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
               title={language === 'sw' ? 'Jisajili kama mfanyabiashara wa soko' : 'Register as a market vendor'}
             >
               <Store className="w-3.5 h-3.5 text-amber-700" />
