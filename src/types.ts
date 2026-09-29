@@ -32,6 +32,26 @@ export interface Vendor {
   totalSoldTZS: number;
   totalNetEarned95TZS: number;
   pendingPayoutTZS: number;
+  
+  // Ada ya Kujiunga (TZS 2,000 Onboarding Fee)
+  registrationFeePaid: boolean;
+  registrationFeeTZS: number; // 2000 TZS
+  registrationDate: string;
+  registrationRef: string;
+}
+
+export interface VendorRegistrationRecord {
+  id: string;
+  vendorId: string;
+  vendorName: string;
+  marketName: DarMarket;
+  phone: string;
+  amountTZS: number; // 2,000 TZS
+  channel: 'mpesa' | 'tigopesa' | 'airtel' | 'halopesa';
+  referenceNumber: string;
+  date: string;
+  timestamp: number;
+  status: 'completed';
 }
 
 export interface ProduceItem {

@@ -4,6 +4,7 @@ import {
   Language,
   MarketplaceOrder,
   Vendor,
+  VendorRegistrationRecord,
 } from '../../types';
 import { t } from '../../translations';
 import { formatMoney, formatTZS } from '../../utils/formatters';
@@ -12,6 +13,7 @@ import { sound } from '../../utils/audio';
 interface CommissionDashboardProps {
   orders: MarketplaceOrder[];
   vendors: Vendor[];
+  registrationFees: VendorRegistrationRecord[];
   currency: Currency;
   lang: Language;
   onOpenPayoutModal: () => void;
@@ -22,6 +24,7 @@ interface CommissionDashboardProps {
 export const CommissionDashboard: React.FC<CommissionDashboardProps> = ({
   orders,
   vendors,
+  registrationFees,
   currency,
   lang,
   onOpenPayoutModal,
@@ -29,6 +32,7 @@ export const CommissionDashboard: React.FC<CommissionDashboardProps> = ({
   onDisburseVendor,
 }) => {
   const tr = t[lang];
+  const [activeLedgerTab, setActiveLedgerTab] = useState<'orders' | 'registration_fees'>('orders');
   const [calcDailySalesTZS, setCalcDailySalesTZS] = useState(1000000); // 1 Million TZS per day default
   const [filterMarket, setFilterMarket] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,6 +45,15 @@ export const CommissionDashboard: React.FC<CommissionDashboardProps> = ({
   const totalCommissionEarned5PctTZS = orders
     .filter((o) => o.status === 'completed')
     .reduce((acc, o) => acc + o.platformCommission5PctTZS, 0);
+
+  // TZS 2,000 Registration Fees Calculations
+  const totalRegistrationFeesEarnedTZS = registrationFees.reduce(
+    (acc, r) => acc + r.amountTZS,
+    0
+  );
+
+  // Combined Total Platform Profit = 5% Commission + TZS 2,000 Onboarding Fees!
+  const combinedPlatformRevenueTZS = totalCommissionEarned5PctTZS + totalRegistrationFeesEarnedTZS;
 
   const totalVendorPendingPayoutsTZS = orders
     .filter((o) => o.status === 'completed' && o.vendorPayoutStatus === 'pending')
@@ -81,7 +94,7 @@ export const CommissionDashboard: React.FC<CommissionDashboardProps> = ({
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
             <span>{lang === 'sw' ? 'Mmiliki wa Website ya Masoko' : 'Marketplace Platform Owner'}</span>
             <span aria-hidden="true">·</span>
-            <span className="font-semibold text-emerald-700">5% Flat Commission Rate</span>
+            <span className="font-semibold text-emerald-700">5% Kamisheni + TZS 2,000 Usajili</span>
             <span aria-hidden="true">·</span>
             <span>Dar es Salaam</span>
           </div>
@@ -90,8 +103,8 @@ export const CommissionDashboard: React.FC<CommissionDashboardProps> = ({
           </h1>
           <p className="text-slate-600 text-xs sm:text-sm mt-0.5 max-w-xl">
             {lang === 'sw'
-              ? 'Fuatilia kamisheni ya asilimia 5 unayopata kwa kila mauzo ya mboga mboga yanayofanyika kati ya wateja na wauza masoko ya Dar.'
-              : 'Track your automatic 5% platform earnings from all produce sales between customers and market vendors.'}
+              ? 'Fuatilia kamisheni yako ya 5% ya kila mauzo ya mboga pamoja na ada ya TZS 2,000 unayowatoza wauza mboga mara tu wanapojiunga.'
+              : 'Track your 5% cut on all vegetable sales plus the TZS 2,000 onboarding fee charged to each seller upon registration.'}
           </p>
         </div>
 
@@ -102,9 +115,12 @@ export const CommissionDashboard: React.FC<CommissionDashboardProps> = ({
               sound.playClick();
               onOpenAddVendorModal();
             }}
-            className="px-3.5 py-2 text-xs font-semibold bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 rounded-xl transition-colors cursor-pointer"
+            className="px-3.5 py-2 text-xs font-semibold bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5"
           >
-            {tr.addVendor}
+            <span>+ {tr.addVendor}</span>
+            <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-mono font-bold">
+              TZS 2,000
+            </span>
           </button>
 
           <button
@@ -122,33 +138,53 @@ export const CommissionDashboard: React.FC<CommissionDashboardProps> = ({
 
       {/* 4 Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Your 5% Commission */}
-        <div className="bg-white border-2 border-emerald-500/30 rounded-2xl p-5 shadow-xs flex flex-col justify-between relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-50 rounded-full -mr-8 -mt-8 pointer-events-none"></div>
+        {/* Card 1: Combined Platform Revenue (5% + TZS 2,000 fees) */}
+        <div className="bg-white border-2 border-emerald-500/40 rounded-2xl p-5 shadow-xs flex flex-col justify-between relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-full -mr-8 -mt-8 pointer-events-none"></div>
           <div className="flex items-center justify-between text-emerald-900 text-xs font-bold">
-            <span>💰 {tr.totalCommissionEarned}</span>
-            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[10px]">
-              5% Yako
+            <span>💰 {tr.combinedTotalEarnings}</span>
+            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-mono">
+              Yako Yote
             </span>
           </div>
           <div className="my-3">
             <span className="font-mono text-3xl font-black text-emerald-700 tabular-nums">
-              {formatMoney(totalCommissionEarned5PctTZS, currency)}
+              {formatMoney(combinedPlatformRevenueTZS, currency)}
             </span>
           </div>
           <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-[11px]">
-            <span className="text-slate-500">{lang === 'sw' ? 'Mapato halisi ya website' : 'Net platform revenue'}</span>
+            <span className="text-slate-500">
+              5% ({formatMoney(totalCommissionEarned5PctTZS, currency)}) + Ada ({formatMoney(totalRegistrationFeesEarnedTZS, currency)})
+            </span>
             <button
               type="button"
               onClick={onOpenPayoutModal}
               className="text-emerald-700 font-bold hover:underline cursor-pointer"
             >
-              {lang === 'sw' ? 'Toa Sasa →' : 'Withdraw →'}
+              {lang === 'sw' ? 'Toa Pesa →' : 'Withdraw →'}
             </button>
           </div>
         </div>
 
-        {/* Card 2: Total Gross Sales */}
+        {/* Card 2: Vendor Onboarding Fees (TZS 2,000 x Vendors) */}
+        <div className="bg-white border border-amber-300 rounded-2xl p-5 shadow-xs flex flex-col justify-between bg-gradient-to-br from-white to-amber-50/30">
+          <div className="flex items-center justify-between text-amber-900 text-xs font-semibold">
+            <span>💳 {tr.totalRegistrationFeesEarned}</span>
+            <span className="bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold">
+              TZS 2,000 / muuzaji
+            </span>
+          </div>
+          <div className="my-3">
+            <span className="font-mono text-2xl font-black text-amber-800 tabular-nums">
+              {formatMoney(totalRegistrationFeesEarnedTZS, currency)}
+            </span>
+          </div>
+          <div className="pt-3 border-t border-slate-100 text-[11px] text-slate-500">
+            {registrationFees.length} {lang === 'sw' ? 'wauzaji wamelipa ada ya usajili' : 'vendors registered'}
+          </div>
+        </div>
+
+        {/* Card 3: Total Gross Produce Sales */}
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
             <span>{tr.grossMarketSales}</span>
@@ -160,11 +196,11 @@ export const CommissionDashboard: React.FC<CommissionDashboardProps> = ({
             </span>
           </div>
           <div className="pt-3 border-t border-slate-100 text-[11px] text-slate-500">
-            {lang === 'sw' ? 'Kutoka masoko yote ya Dar' : 'Gross GMV processed'}
+            {lang === 'sw' ? 'Kariakoo, Ilala, Tandale & Buguruni' : 'Gross market volume'}
           </div>
         </div>
 
-        {/* Card 3: Vendor Payouts (95%) */}
+        {/* Card 4: Vendor Payouts (95%) */}
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
             <span>{tr.vendorDisbursed}</span>
@@ -177,22 +213,6 @@ export const CommissionDashboard: React.FC<CommissionDashboardProps> = ({
           </div>
           <div className="pt-3 border-t border-slate-100 text-[11px] text-slate-500">
             {formatMoney(totalVendorPendingPayoutsTZS, currency)} {lang === 'sw' ? 'inayosubiri' : 'pending'}
-          </div>
-        </div>
-
-        {/* Card 4: Active Vendors */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
-            <span>{tr.activeVendorsCount}</span>
-            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-          </div>
-          <div className="my-3">
-            <span className="font-mono text-2xl font-extrabold text-slate-900 tabular-nums">
-              {vendors.length} {lang === 'sw' ? 'Wachuuzi' : 'Vendors'}
-            </span>
-          </div>
-          <div className="pt-3 border-t border-slate-100 text-[11px] text-slate-500">
-            {lang === 'sw' ? 'Kariakoo, Ilala, Tandale & Buguruni' : 'Covering major Dar markets'}
           </div>
         </div>
       </div>
@@ -288,130 +308,204 @@ export const CommissionDashboard: React.FC<CommissionDashboardProps> = ({
         </div>
       </div>
 
-      {/* Split Transactions Ledger */}
+      {/* Ledger Section with Tabs */}
       <div className="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
-        {/* Ledger Header */}
+        {/* Ledger Header & Tab Switcher */}
         <div className="p-5 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h2 className="font-semibold text-slate-900 text-base">
-              {lang === 'sw' ? 'Miamala ya Mauzo & Gawio la Asilimia 5' : 'Market Orders & 5% Split Ledger'}
-            </h2>
-            <p className="text-xs text-slate-500">
-              {lang === 'sw'
-                ? 'Kila oda iliyolipwa inaonyesha mgawo wako wa 5% na 95% ya muuza mboga wa soko.'
-                : 'Every completed order displays your exact 5% take and the 95% vendor payout.'}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Search */}
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Tafuta oda, mteja, mtaa wa Dar..."
-              className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 w-52 sm:w-60"
-            />
-
-            {/* Market Filter */}
-            <select
-              value={filterMarket}
-              onChange={(e) => setFilterMarket(e.target.value)}
-              className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:outline-none text-slate-800"
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                setActiveLedgerTab('orders');
+              }}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-xl transition-colors cursor-pointer ${
+                activeLedgerTab === 'orders'
+                  ? 'bg-slate-900 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:text-slate-900'
+              }`}
             >
-              <option value="all">{lang === 'sw' ? 'Masoko Yote' : 'All Markets'}</option>
-              <option value="Kariakoo">Soko la Kariakoo</option>
-              <option value="Ilala">Soko la Ilala</option>
-              <option value="Tandale">Soko la Tandale</option>
-              <option value="Buguruni">Soko la Buguruni</option>
-            </select>
+              🥬 {lang === 'sw' ? 'Miamala ya Mauzo & Gawio la 5%' : 'Produce Orders (5% Split)'}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                setActiveLedgerTab('registration_fees');
+              }}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 ${
+                activeLedgerTab === 'registration_fees'
+                  ? 'bg-amber-700 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <span>💳 {lang === 'sw' ? 'Ada za Kujiunga (TZS 2,000)' : 'Vendor Onboarding Fees (TZS 2,000)'}</span>
+              <span className="text-[10px] bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded font-mono font-bold">
+                {registrationFees.length}
+              </span>
+            </button>
           </div>
+
+          {activeLedgerTab === 'orders' && (
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Search */}
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Tafuta oda, mteja, mtaa wa Dar..."
+                className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 w-52 sm:w-60"
+              />
+
+              {/* Market Filter */}
+              <select
+                value={filterMarket}
+                onChange={(e) => setFilterMarket(e.target.value)}
+                className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:outline-none text-slate-800"
+              >
+                <option value="all">{lang === 'sw' ? 'Masoko Yote' : 'All Markets'}</option>
+                <option value="Kariakoo">Soko la Kariakoo</option>
+                <option value="Ilala">Soko la Ilala</option>
+                <option value="Tandale">Soko la Tandale</option>
+                <option value="Buguruni">Soko la Buguruni</option>
+              </select>
+            </div>
+          )}
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
-              <tr>
-                <th className="py-3 px-4">{tr.orderNumber}</th>
-                <th className="py-3 px-4">{tr.customer}</th>
-                <th className="py-3 px-4">{tr.grossAmount}</th>
-                <th className="py-3 px-4 text-emerald-800 bg-emerald-50/50">
-                  {tr.yourCommission5Pct}
-                </th>
-                <th className="py-3 px-4 text-blue-800">{tr.vendorPayout95Pct}</th>
-                <th className="py-3 px-4">{tr.paymentStatus}</th>
-                <th className="py-3 px-4 text-right">{tr.vendorPayoutAction}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filteredOrders.length === 0 ? (
+        {/* Tab 1: Orders Table (5% Commission) */}
+        {activeLedgerTab === 'orders' && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-500">
-                    Hakuna oda iliyopatikana.
-                  </td>
+                  <th className="py-3 px-4">{tr.orderNumber}</th>
+                  <th className="py-3 px-4">{tr.customer}</th>
+                  <th className="py-3 px-4">{tr.grossAmount}</th>
+                  <th className="py-3 px-4 text-emerald-800 bg-emerald-50/50">
+                    {tr.yourCommission5Pct}
+                  </th>
+                  <th className="py-3 px-4 text-blue-800">{tr.vendorPayout95Pct}</th>
+                  <th className="py-3 px-4">{tr.paymentStatus}</th>
+                  <th className="py-3 px-4 text-right">{tr.vendorPayoutAction}</th>
                 </tr>
-              ) : (
-                filteredOrders.map((ord) => {
-                  const vendorNames = Array.from(new Set(ord.items.map((i) => i.vendorName))).join(', ');
-                  const marketNames = Array.from(new Set(ord.items.map((i) => i.marketName))).join(', ');
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredOrders.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="py-8 text-center text-slate-500">
+                      Hakuna oda iliyopatikana.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredOrders.map((ord) => {
+                    const vendorNames = Array.from(new Set(ord.items.map((i) => i.vendorName))).join(', ');
+                    const marketNames = Array.from(new Set(ord.items.map((i) => i.marketName))).join(', ');
 
-                  return (
-                    <tr key={ord.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-3.5 px-4 font-mono font-semibold text-slate-900">
-                        {ord.referenceNumber}
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <p className="font-semibold text-slate-900">{ord.customerName}</p>
-                        <p className="text-[11px] text-slate-500">
-                          📍 {ord.deliveryLocation} · {ord.customerPhone}
-                        </p>
-                      </td>
-                      <td className="py-3.5 px-4 font-mono font-bold text-slate-900 tabular-nums">
-                        {formatMoney(ord.grossItemsTZS, currency)}
-                      </td>
-                      {/* Exact 5% Platform Commission Highlight */}
-                      <td className="py-3.5 px-4 font-mono font-black text-emerald-700 bg-emerald-50/50 tabular-nums">
-                        +{formatMoney(ord.platformCommission5PctTZS, currency)}
-                      </td>
-                      {/* Exact 95% Vendor Payout */}
-                      <td className="py-3.5 px-4 font-mono font-bold text-blue-900 tabular-nums">
-                        {formatMoney(ord.vendorNet95PctTZS, currency)}
-                        <span className="block text-[10px] text-slate-400 font-sans font-normal truncate max-w-[140px]">
-                          {vendorNames} ({marketNames})
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span className="inline-flex items-center gap-1.5 text-emerald-700 font-semibold">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-                          {ord.channel.toUpperCase()}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 text-right">
-                        {ord.vendorPayoutStatus === 'disbursed' ? (
-                          <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md">
-                            {tr.disbursed}
+                    return (
+                      <tr key={ord.id} className="hover:bg-slate-50/70 transition-colors">
+                        <td className="py-3.5 px-4 font-mono font-semibold text-slate-900">
+                          {ord.referenceNumber}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <p className="font-semibold text-slate-900">{ord.customerName}</p>
+                          <p className="text-[11px] text-slate-500">
+                            📍 {ord.deliveryLocation} · {ord.customerPhone}
+                          </p>
+                        </td>
+                        <td className="py-3.5 px-4 font-mono font-bold text-slate-900 tabular-nums">
+                          {formatMoney(ord.grossItemsTZS, currency)}
+                        </td>
+                        {/* Exact 5% Platform Commission Highlight */}
+                        <td className="py-3.5 px-4 font-mono font-black text-emerald-700 bg-emerald-50/50 tabular-nums">
+                          +{formatMoney(ord.platformCommission5PctTZS, currency)}
+                        </td>
+                        {/* Exact 95% Vendor Payout */}
+                        <td className="py-3.5 px-4 font-mono font-bold text-blue-900 tabular-nums">
+                          {formatMoney(ord.vendorNet95PctTZS, currency)}
+                          <span className="block text-[10px] text-slate-400 font-sans font-normal truncate max-w-[140px]">
+                            {vendorNames} ({marketNames})
                           </span>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              sound.playClick();
-                              onDisburseVendor(ord.id);
-                            }}
-                            className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-colors cursor-pointer shadow-xs"
-                          >
-                            {tr.disburseNow}
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className="inline-flex items-center gap-1.5 text-emerald-700 font-semibold">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                            {ord.channel.toUpperCase()}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-right">
+                          {ord.vendorPayoutStatus === 'disbursed' ? (
+                            <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md">
+                              {tr.disbursed}
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                sound.playClick();
+                                onDisburseVendor(ord.id);
+                              }}
+                              className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-colors cursor-pointer shadow-xs"
+                            >
+                              {tr.disburseNow}
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Tab 2: Vendor Registration Fees Table (TZS 2,000 Onboarding Records) */}
+        {activeLedgerTab === 'registration_fees' && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-amber-50/60 border-b border-amber-200 text-amber-900 uppercase tracking-wider font-semibold">
+                <tr>
+                  <th className="py-3 px-4">Ref ya Usajili</th>
+                  <th className="py-3 px-4">Muuzaji Aliyejiunga</th>
+                  <th className="py-3 px-4">Soko la Dar</th>
+                  <th className="py-3 px-4">Namba ya Simu</th>
+                  <th className="py-3 px-4">Mtandao</th>
+                  <th className="py-3 px-4">Tarehe ya Kujiunga</th>
+                  <th className="py-3 px-4 text-right">Ada Iliyolipwa (Kwako)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {registrationFees.map((rec) => (
+                  <tr key={rec.id} className="hover:bg-amber-50/30 transition-colors">
+                    <td className="py-3.5 px-4 font-mono font-semibold text-slate-800">
+                      {rec.referenceNumber}
+                    </td>
+                    <td className="py-3.5 px-4 font-bold text-slate-900">
+                      {rec.vendorName}
+                    </td>
+                    <td className="py-3.5 px-4 text-slate-700">
+                      Soko la {rec.marketName}
+                    </td>
+                    <td className="py-3.5 px-4 font-mono text-slate-600">
+                      {rec.phone}
+                    </td>
+                    <td className="py-3.5 px-4 uppercase font-semibold text-amber-800">
+                      {rec.channel}
+                    </td>
+                    <td className="py-3.5 px-4 text-slate-500 font-mono text-[11px]">
+                      {rec.date}
+                    </td>
+                    <td className="py-3.5 px-4 text-right font-mono font-black text-emerald-700 tabular-nums">
+                      +{formatMoney(rec.amountTZS, currency)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

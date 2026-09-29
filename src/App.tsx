@@ -11,9 +11,11 @@ import {
   PayoutRecord,
   ProduceItem,
   Vendor,
+  VendorRegistrationRecord,
 } from './types';
 import {
   INITIAL_VENDORS,
+  INITIAL_REGISTRATION_FEES,
   INITIAL_PRODUCE,
   INITIAL_ORDERS,
   INITIAL_PAYOUT_HISTORY,
@@ -39,6 +41,11 @@ export default function App() {
   const [vendors, setVendors] = useState<Vendor[]>(() => {
     const saved = localStorage.getItem('soko_vendors');
     return saved ? JSON.parse(saved) : INITIAL_VENDORS;
+  });
+
+  const [registrationFees, setRegistrationFees] = useState<VendorRegistrationRecord[]>(() => {
+    const saved = localStorage.getItem('soko_registration_fees');
+    return saved ? JSON.parse(saved) : INITIAL_REGISTRATION_FEES;
   });
 
   const [produceList] = useState<ProduceItem[]>(INITIAL_PRODUCE);
@@ -69,6 +76,10 @@ export default function App() {
   }, [vendors]);
 
   useEffect(() => {
+    localStorage.setItem('soko_registration_fees', JSON.stringify(registrationFees));
+  }, [registrationFees]);
+
+  useEffect(() => {
     localStorage.setItem('soko_orders', JSON.stringify(orders));
   }, [orders]);
 
@@ -76,16 +87,23 @@ export default function App() {
     localStorage.setItem('soko_payouts', JSON.stringify(payouts));
   }, [payouts]);
 
-  // Calculate 5% Commission Available
+  // Calculate 5% Commission + TZS 2,000 Vendor Registration Fees
   const totalCommissionEarned5PctTZS = orders
     .filter((o) => o.status === 'completed')
     .reduce((acc, o) => acc + o.platformCommission5PctTZS, 0);
+
+  const totalRegistrationFeesEarnedTZS = registrationFees.reduce(
+    (acc, r) => acc + r.amountTZS,
+    0
+  );
+
+  const totalGrossPlatformEarnedTZS = totalCommissionEarned5PctTZS + totalRegistrationFeesEarnedTZS;
 
   const totalOwnerWithdrawnTZS = payouts
     .filter((po) => po.recipientType === 'platform_owner' && po.status === 'completed')
     .reduce((acc, po) => acc + po.amountTZS, 0);
 
-  const availableCommissionTZS = Math.max(0, totalCommissionEarned5PctTZS - totalOwnerWithdrawnTZS);
+  const availableCommissionTZS = Math.max(0, totalGrossPlatformEarnedTZS - totalOwnerWithdrawnTZS);
 
   // Handlers
   const handleOrderCompleted = (newOrder: MarketplaceOrder) => {
@@ -122,8 +140,9 @@ export default function App() {
     setPayouts((prev) => [newPayout, ...prev]);
   };
 
-  const handleAddVendor = (newVendor: Vendor) => {
+  const handleAddVendor = (newVendor: Vendor, regRecord: VendorRegistrationRecord) => {
     setVendors((prev) => [newVendor, ...prev]);
+    setRegistrationFees((prev) => [regRecord, ...prev]);
   };
 
   // Quick simulate incoming market order from Dar
@@ -200,6 +219,7 @@ export default function App() {
           <CommissionDashboard
             orders={orders}
             vendors={vendors}
+            registrationFees={registrationFees}
             currency={currency}
             lang={lang}
             onOpenPayoutModal={() => setIsPayoutOpen(true)}
@@ -266,7 +286,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             <span className="font-semibold text-slate-800">SokoLetu Dar</span>
             <span aria-hidden="true">·</span>
-            <span>{lang === 'sw' ? 'Mfumo wa Gawio la 5% kwa Masoko ya Dar es Salaam' : 'Dar Markets 5% Split Engine'}</span>
+            <span>{lang === 'sw' ? 'Mfumo wa Masoko ya Dar: 5% ya Mauzo & Ada ya TZS 2,000 ya Usajili' : 'Dar Markets 5% Split & TZS 2,000 Onboarding Fee'}</span>
             <span aria-hidden="true">·</span>
             <span>Kariakoo, Ilala, Tandale & Buguruni</span>
           </div>

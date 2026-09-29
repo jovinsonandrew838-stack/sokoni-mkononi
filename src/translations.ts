@@ -46,6 +46,11 @@ export const t = {
     vendorDisbursed: 'Pesa Zilizolipwa kwa Wauzaji (95%)',
     pendingVendorPayouts: 'Inayosubiri Kutumwa kwa Wauzaji',
     activeVendorsCount: 'Wauza Mboga Waliosajiliwa Masokoni',
+    totalRegistrationFeesEarned: 'Mapato ya Ada za Kujiunga (Wauzaji)',
+    combinedTotalEarnings: 'Jumla ya Mapato Yote ya Website (5% + Ada)',
+    vendorRegistrationFee: 'Ada ya Kujiunga ya Muuzaji (TZS 2,000)',
+    registrationFeeDesc: 'Kila muuza mboga hutozwa ada ya kujiunga ya TZS 2,000 mara tu anaposajiliwa ili kuweka bidhaa zake.',
+    payRegistrationFeeBtn: 'Lipa Ada ya TZS 2,000 & Malizia Usajili',
 
     // Ledger
     orderNumber: 'Namba ya Oda',
@@ -114,6 +119,11 @@ export const t = {
     vendorDisbursed: 'Disbursed to Vendors (95%)',
     pendingVendorPayouts: 'Pending Vendor Payouts',
     activeVendorsCount: 'Registered Market Vendors',
+    totalRegistrationFeesEarned: 'Vendor Onboarding Fee Revenue',
+    combinedTotalEarnings: 'Total Platform Revenue (5% + Onboarding)',
+    vendorRegistrationFee: 'Vendor Registration Fee (TZS 2,000)',
+    registrationFeeDesc: 'Each market vendor is charged a one-time TZS 2,000 registration fee upon joining.',
+    payRegistrationFeeBtn: 'Pay TZS 2,000 Fee & Complete Registration',
 
     // Ledger
     orderNumber: 'Order Number',

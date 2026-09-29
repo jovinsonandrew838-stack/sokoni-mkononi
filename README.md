@@ -1,22 +1,25 @@
 # Sokoni Mkononi 🥬🛒
-### Mfumo wa Kuunganisha Wateja na Wauza Mboga Mboga wa Masoko ya Dar es Salaam Wenye Gawio la Asilimia Tano (5% Commission Split)
+### Mfumo wa Kuunganisha Wateja na Wauza Mboga Mboga wa Masoko ya Dar es Salaam Wenye Gawio la Asilimia Tano (5% Commission Split) na Ada ya Usajili ya TZS 2,000
 
 **Sokoni Mkononi** ni jukwaa la kidijitali lililotengenezwa mahususi kwa ajili ya jiji la **Dar es Salaam, Tanzania**, linalowawezesha wateja kuagiza mboga mboga, viungo, na matunda fresh moja kwa moja kutoka kwenye vibanda vya masoko maarufu kama vile **Kariakoo, Ilala, Tandale, na Buguruni**.
 
 ---
 
-## 💡 Jinsi Mfumo wa Kamisheni ya 5% Unavyofanya Kazi (5% Split Payment Engine)
+## 💡 Njia Mbili za Mapato ya Mmiliki wa Website (Revenue Model)
 
-Kila oda ya mboga inapolipwa na mteja kwenye website kupitia **M-Pesa, Tigo Pesa, Airtel Money, Halopesa, au Kadi ya Benki**, mfumo unagawa fedha hizo moja kwa moja:
+1. **💳 Ada ya Usajili / Kujiunga ya TZS 2,000 kwa Kila Muuzaji Mpya**:
+   - Kila muuza mboga wa soko anaposajiliwa kwenye mtandao ili kuanza kuuza bidhaa zake, anatozwa ada ya mara moja tu ya **TZS 2,000** kupitia **M-Pesa, Tigo Pesa, au Airtel Money**.
+   - Fedha hizi zote za ada zinaingia moja kwa moja kwenye mapato ya website ya mmiliki.
+   - *Mfano: Wauzaji 100 wakijiunga = TZS 200,000 za ada ya usajili mara moja!*
 
-1. **💰 Kamisheni Yako ya Website (5%)**:
-   - Mfumo unakata asilimia tano (5%) ya mauzo ya mboga na kuiweka papo hapo kwenye salio lako la mmiliki wa website (Platform Revenue).
-   - *Mfano: Mteja akinunua mboga za TZS 40,000, unapata TZS 2,000 moja kwa moja.*
-2. **🧺 Malipo ya Muuza Mboga wa Soko (95%)**:
-   - Asilimia tisini na tano (95%) inatengwa na kulipwa kwenye pochi ya simu ya muuzaji wa soko husika (k.m. Mama Asha wa Kariakoo au Mzee Juma wa Ilala).
-   - *Kutoka TZS 40,000, muuzaji anapokea TZS 38,000 bila kuchelewa.*
+2. **💰 Kamisheni ya Asilimia Tano (5% Commission Split)**:
+   - Kila oda ya mboga inapolipwa na mteja kwenye website:
+     - **5%** inakatwa papo hapo kama kamisheni ya website (Platform Revenue).
+     - **95%** inatengwa na kulipwa moja kwa moja kwenye pochi ya simu ya muuzaji husika (k.m. Mama Asha wa Kariakoo au Mzee Juma wa Ilala).
+     - *Mfano: Mteja akinunua mboga za TZS 40,000, mmiliki anapata TZS 2,000 papo hapo na muuzaji anapata TZS 38,000.*
+
 3. **🛵 Usafiri wa Boda/Bajaji Dar es Salaam**:
-   - Gharama ya usafiri wa kufikisha mboga mtaani kwa mteja (k.m. Sinza, Kinondoni, Mikocheni, Masaki) inalipwa na mteja moja kwa moja kwa msafirishaji.
+   - Usafiri wa kufikisha mboga kwa mteja (k.m. Sinza, Kinondoni, Mikocheni, Masaki) unalipwa moja kwa moja kwa msafirishaji.
 
 ---
 

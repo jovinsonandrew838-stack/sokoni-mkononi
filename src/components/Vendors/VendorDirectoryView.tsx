@@ -92,6 +92,14 @@ export const VendorDirectoryView: React.FC<VendorDirectoryViewProps> = ({
                 </span>
               </div>
 
+              {/* Onboarding fee status */}
+              <div className="flex justify-between items-center bg-amber-50/70 border border-amber-200/60 px-2 py-1 rounded-lg text-[11px]">
+                <span className="text-amber-800 font-medium">{lang === 'sw' ? 'Ada ya Kujiunga:' : 'Onboarding Fee:'}</span>
+                <span className="font-mono font-bold text-amber-900">
+                  TZS 2,000 ✓
+                </span>
+              </div>
+
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
                 <span className="text-slate-400">{lang === 'sw' ? 'M-Pesa / Tigo' : 'Mobile Wallet'}</span>
                 <span className="font-semibold uppercase text-emerald-700">{v.mno}</span>

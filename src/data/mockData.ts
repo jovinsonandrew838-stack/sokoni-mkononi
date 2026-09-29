@@ -1,4 +1,4 @@
-import { Vendor, ProduceItem, MarketplaceOrder, PayoutRecord } from '../types';
+import { Vendor, ProduceItem, MarketplaceOrder, PayoutRecord, VendorRegistrationRecord } from '../types';
 
 export const INITIAL_VENDORS: Vendor[] = [
   {
@@ -14,6 +14,10 @@ export const INITIAL_VENDORS: Vendor[] = [
     totalSoldTZS: 3480000,
     totalNetEarned95TZS: 3306000,
     pendingPayoutTZS: 185000,
+    registrationFeePaid: true,
+    registrationFeeTZS: 2000,
+    registrationDate: '2026-09-10 11:20',
+    registrationRef: 'REG-TZS-2000-01',
   },
   {
     id: 'ven-2',
@@ -28,6 +32,10 @@ export const INITIAL_VENDORS: Vendor[] = [
     totalSoldTZS: 1840000,
     totalNetEarned95TZS: 1748000,
     pendingPayoutTZS: 78000,
+    registrationFeePaid: true,
+    registrationFeeTZS: 2000,
+    registrationDate: '2026-09-12 09:15',
+    registrationRef: 'REG-TZS-2000-02',
   },
   {
     id: 'ven-3',
@@ -42,6 +50,10 @@ export const INITIAL_VENDORS: Vendor[] = [
     totalSoldTZS: 2650000,
     totalNetEarned95TZS: 2517500,
     pendingPayoutTZS: 120000,
+    registrationFeePaid: true,
+    registrationFeeTZS: 2000,
+    registrationDate: '2026-09-15 14:40',
+    registrationRef: 'REG-TZS-2000-03',
   },
   {
     id: 'ven-4',
@@ -56,6 +68,65 @@ export const INITIAL_VENDORS: Vendor[] = [
     totalSoldTZS: 1420000,
     totalNetEarned95TZS: 1349000,
     pendingPayoutTZS: 45000,
+    registrationFeePaid: true,
+    registrationFeeTZS: 2000,
+    registrationDate: '2026-09-18 16:05',
+    registrationRef: 'REG-TZS-2000-04',
+  }
+];
+
+export const INITIAL_REGISTRATION_FEES: VendorRegistrationRecord[] = [
+  {
+    id: 'reg-rec-1',
+    vendorId: 'ven-1',
+    vendorName: 'Mama Asha Mussa',
+    marketName: 'Kariakoo',
+    phone: '+255 754 882 104',
+    amountTZS: 2000,
+    channel: 'mpesa',
+    referenceNumber: 'REG-TZS-2000-01',
+    date: '2026-09-10 11:20',
+    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 19,
+    status: 'completed',
+  },
+  {
+    id: 'reg-rec-2',
+    vendorId: 'ven-2',
+    vendorName: 'Mzee Juma Hamisi',
+    marketName: 'Ilala',
+    phone: '+255 713 440 918',
+    amountTZS: 2000,
+    channel: 'tigopesa',
+    referenceNumber: 'REG-TZS-2000-02',
+    date: '2026-09-12 09:15',
+    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 17,
+    status: 'completed',
+  },
+  {
+    id: 'reg-rec-3',
+    vendorId: 'ven-3',
+    vendorName: 'Kaka Baraka Mwamba',
+    marketName: 'Tandale',
+    phone: '+255 788 190 223',
+    amountTZS: 2000,
+    channel: 'airtel',
+    referenceNumber: 'REG-TZS-2000-03',
+    date: '2026-09-15 14:40',
+    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 14,
+    status: 'completed',
+  },
+  {
+    id: 'reg-rec-4',
+    vendorId: 'ven-4',
+    vendorName: 'Bi. Zainab Kassim',
+    marketName: 'Buguruni',
+    phone: '+255 622 300 451',
+    amountTZS: 2000,
+    channel: 'halopesa',
+    referenceNumber: 'REG-TZS-2000-04',
+    date: '2026-09-18 16:05',
+    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 11,
+    status: 'completed',
   }
 ];
 
