@@ -1,194 +1,238 @@
 import React from 'react';
-import { Language, Currency } from '../types';
-import { t } from '../translations';
-import { sound } from '../utils/audio';
+import { ShoppingBag, Search, MapPin, PhoneCall, Globe, X, Store } from 'lucide-react';
+import { Language } from '../types';
+import { DELIVERY_ZONES, DeliveryZone } from '../data/products';
 
 interface NavbarProps {
-  currentTab: 'marketplace' | 'commission' | 'vendors';
-  setCurrentTab: (tab: 'marketplace' | 'commission' | 'vendors') => void;
-  lang: Language;
-  setLang: (lang: Language) => void;
-  currency: Currency;
-  setCurrency: (c: Currency) => void;
-  onOpenEmbedModal: () => void;
-  onOpenPayoutModal: () => void;
-  onOpenGitHubModal: () => void;
-  onSimulateOrder: () => void;
-  totalCommission5PctTZS: number;
+  language: Language;
+  onLanguageChange: (lang: Language) => void;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  cartCount: number;
+  cartTotal: number;
+  onOpenCart: () => void;
+  selectedZone: DeliveryZone;
+  onSelectZone: (zone: DeliveryZone) => void;
+  onOpenVendorModal: () => void;
+  vendorsCount: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  currentTab,
-  setCurrentTab,
-  lang,
-  setLang,
-  currency,
-  setCurrency,
-  onOpenEmbedModal,
-  onOpenPayoutModal,
-  onOpenGitHubModal,
-  onSimulateOrder,
-  totalCommission5PctTZS,
+  language,
+  onLanguageChange,
+  searchQuery,
+  onSearchChange,
+  cartCount,
+  cartTotal,
+  onOpenCart,
+  selectedZone,
+  onSelectZone,
+  onOpenVendorModal,
+  vendorsCount,
 }) => {
-  const tr = t[lang];
+  const [isZoneDropdownOpen, setIsZoneDropdownOpen] = React.useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Zone 1: Single text element wordmark in display font */}
-        <button
-          onClick={() => {
-            sound.playClick();
-            setCurrentTab('marketplace');
-          }}
-          className="text-left group cursor-pointer focus-visible:outline-none flex items-center gap-2"
-        >
-          <span className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-sm">
-            🥬
-          </span>
-          <span className="font-display text-xl font-bold tracking-tight text-slate-900 group-hover:text-emerald-600 transition-colors">
-            {tr.brandName}
-          </span>
-        </button>
-
-        {/* Zone 2: 4 clean text navigation links */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <button
-            onClick={() => {
-              sound.playClick();
-              setCurrentTab('marketplace');
-            }}
-            className={`transition-colors cursor-pointer py-1 border-b-2 ${
-              currentTab === 'marketplace'
-                ? 'text-emerald-700 border-emerald-600 font-semibold'
-                : 'text-slate-600 border-transparent hover:text-slate-900'
-            }`}
-          >
-            {tr.navMarketplace}
-          </button>
-
-          <button
-            onClick={() => {
-              sound.playClick();
-              setCurrentTab('commission');
-            }}
-            className={`transition-colors cursor-pointer py-1 border-b-2 flex items-center gap-1.5 ${
-              currentTab === 'commission'
-                ? 'text-emerald-700 border-emerald-600 font-semibold'
-                : 'text-slate-600 border-transparent hover:text-slate-900'
-            }`}
-          >
-            <span>{tr.navCommission}</span>
-            <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
-              5%
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-stone-200">
+      {/* Top Banner Notice */}
+      <div className="bg-emerald-800 text-emerald-50 text-xs px-4 py-1.5 font-medium">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>
+              {language === 'sw'
+                ? 'Soko La Asubuhi Limefunguliwa: Mazao yote yamewasili fresh kutoka shambani!'
+                : 'Morning Fresh Market Open: Farm-direct produce delivered in under 2 hours!'}
             </span>
-          </button>
+          </div>
+          <div className="hidden sm:flex items-center gap-4 text-emerald-200 text-xs">
+            <span className="flex items-center gap-1.5">
+              <PhoneCall className="w-3.5 h-3.5 text-amber-300" />
+              <a href="tel:0704205872" className="hover:underline font-bold text-white">
+                0704 205 872
+              </a>
+              <span className="text-emerald-300">(M-Pesa / WhatsApp)</span>
+            </span>
+            <span aria-hidden="true">·</span>
+            <span className="flex items-center gap-1 text-emerald-100">
+              <MapPin className="w-3 h-3 text-amber-300" />
+              <span>Kigamboni Ferry, Dar es Salaam</span>
+            </span>
+          </div>
+        </div>
+      </div>
 
-          <button
-            onClick={() => {
-              sound.playClick();
-              setCurrentTab('vendors');
-            }}
-            className={`transition-colors cursor-pointer py-1 border-b-2 ${
-              currentTab === 'vendors'
-                ? 'text-emerald-700 border-emerald-600 font-semibold'
-                : 'text-slate-600 border-transparent hover:text-slate-900'
-            }`}
-          >
-            {tr.navVendors}
-          </button>
+      {/* Main Bar */}
+      <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4">
+        <div className="flex items-center justify-between gap-3 md:gap-6">
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <a href="#" className="flex items-center gap-2.5 group">
+              <div className="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xl shadow-sm group-hover:bg-emerald-800 transition-colors">
+                <span className="tracking-tight">S</span>
+                <span className="text-amber-300 text-sm -ml-0.5 font-black">M</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-lg sm:text-xl font-extrabold text-stone-900 tracking-tight leading-tight flex items-center gap-1">
+                  Sokoni Mkononi
+                  <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                </span>
+                <span className="text-[11px] text-stone-500 tracking-wide font-medium">
+                  {language === 'sw' ? 'Soko Lako La Vyakula' : 'Your Digital Fresh Market'}
+                </span>
+              </div>
+            </a>
+          </div>
 
-          <button
-            onClick={() => {
-              sound.playClick();
-              onOpenEmbedModal();
-            }}
-            className="text-slate-600 hover:text-slate-900 transition-colors cursor-pointer py-1"
-          >
-            {tr.navEmbed}
-          </button>
+          {/* Search Bar */}
+          <div className="flex-1 max-w-xl hidden md:block">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e.target.value)}
+                placeholder={
+                  language === 'sw'
+                    ? 'Tafuta nyanya, mchele wa Kyela, ndizi, kuku, asali, au viungo...'
+                    : 'Search fresh tomatoes, Kyela rice, bananas, fish, honey...'
+                }
+                className="w-full pl-10 pr-9 py-2.5 text-sm bg-stone-50 border border-stone-300 rounded-lg text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition-all"
+              />
+              <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              {searchQuery && (
+                <button
+                  onClick={() => onSearchChange('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 p-0.5"
+                  aria-label="Futa utafutaji"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
 
-          {/* Currency Switcher */}
-          <div className="flex items-center bg-slate-100 rounded-lg p-0.5 ml-1">
+          {/* Actions & Utilities */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Delivery Location dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsZoneDropdownOpen(!isZoneDropdownOpen)}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs sm:text-sm font-medium transition-colors"
+                title="Badilisha eneo la kupelekewa"
+              >
+                <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span className="max-w-[100px] sm:max-w-[130px] truncate">
+                  {selectedZone.name.split('(')[0].trim()}
+                </span>
+              </button>
+
+              {isZoneDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-stone-200 py-2 z-50">
+                  <div className="px-3 py-1.5 text-xs font-semibold text-stone-400 uppercase tracking-wider">
+                    {language === 'sw' ? 'Chagua Eneo Lako' : 'Select Delivery Area'}
+                  </div>
+                  <div className="max-h-60 overflow-y-auto divide-y divide-stone-100">
+                    {DELIVERY_ZONES.map((zone) => (
+                      <button
+                        key={zone.id}
+                        type="button"
+                        onClick={() => {
+                          onSelectZone(zone);
+                          setIsZoneDropdownOpen(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 text-xs flex flex-col hover:bg-emerald-50 transition-colors ${
+                          selectedZone.id === zone.id ? 'bg-emerald-50/70 font-semibold' : ''
+                        }`}
+                      >
+                        <div className="flex justify-between items-center text-stone-900">
+                          <span>{zone.name}</span>
+                          <span className="text-emerald-700 font-bold shrink-0 ml-2">
+                            TSh {zone.fee.toLocaleString()}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-stone-500 mt-0.5">
+                          {zone.region} · {zone.estimatedHours}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Language Switcher */}
             <button
-              onClick={() => {
-                sound.playClick();
-                setCurrency('TZS');
-              }}
-              className={`px-2 py-0.5 text-xs font-semibold rounded-md transition-colors ${
-                currency === 'TZS'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
+              type="button"
+              onClick={() => onLanguageChange(language === 'sw' ? 'en' : 'sw')}
+              className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-stone-700 hover:bg-stone-100 rounded-lg transition-colors border border-stone-200"
+              title="Badilisha Lugha / Change Language"
             >
-              TZS
+              <Globe className="w-3.5 h-3.5 text-stone-500" />
+              <span>{language === 'sw' ? 'SW' : 'EN'}</span>
             </button>
+
+            {/* Vendor Registration Button for Small Market Sellers */}
             <button
-              onClick={() => {
-                sound.playClick();
-                setCurrency('USD');
-              }}
-              className={`px-2 py-0.5 text-xs font-semibold rounded-md transition-colors ${
-                currency === 'USD'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
+              type="button"
+              onClick={onOpenVendorModal}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg text-xs font-bold transition-all shadow-xs"
+              title={language === 'sw' ? 'Jisajili kama mfanyabiashara wa soko' : 'Register as a market vendor'}
             >
-              USD
+              <Store className="w-3.5 h-3.5 text-amber-700" />
+              <span className="hidden sm:inline">
+                {language === 'sw' ? 'Uza Sokoni' : 'Sell with Us'}
+              </span>
+              <span className="sm:hidden">
+                {language === 'sw' ? 'Genge' : 'Sell'}
+              </span>
+            </button>
+
+            {/* Cart Trigger Button */}
+            <button
+              type="button"
+              onClick={onOpenCart}
+              className="flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white px-3 sm:px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all shadow-sm active:scale-95"
+            >
+              <div className="relative">
+                <ShoppingBag className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-amber-400 text-stone-950 text-[10px] font-black rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
+              <span className="hidden sm:inline font-bold">
+                TSh {cartTotal.toLocaleString()}
+              </span>
             </button>
           </div>
-        </nav>
+        </div>
 
-        {/* Zone 3: 1-2 primary actions */}
-        <div className="flex items-center gap-2">
-          {/* GitHub Repo Button */}
-          <button
-            type="button"
-            onClick={() => {
-              sound.playClick();
-              onOpenGitHubModal();
-            }}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
-            title="Unganisha na GitHub (sokoni-mkononi)"
-          >
-            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-            </svg>
-            <span className="hidden lg:inline">GitHub</span>
-          </button>
-
-          {/* Language Toggle */}
-          <button
-            onClick={() => {
-              sound.playClick();
-              setLang(lang === 'sw' ? 'en' : 'sw');
-            }}
-            className="px-2.5 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors whitespace-nowrap"
-            title="Badili Lugha / Switch Language"
-          >
-            {lang === 'sw' ? '🇺🇸 EN' : '🇹🇿 SW'}
-          </button>
-
-          {/* Quick Simulate Order button */}
-          <button
-            type="button"
-            onClick={onSimulateOrder}
-            className="hidden sm:flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg transition-colors cursor-pointer"
-            title="Jaribu ununuzi wa mboga na gawio la 5%"
-          >
-            <span>{tr.simulateOrder}</span>
-          </button>
-
-          {/* Primary Action Button */}
-          <button
-            onClick={() => {
-              sound.playClick();
-              onOpenPayoutModal();
-            }}
-            className="px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors whitespace-nowrap cursor-pointer shadow-xs"
-          >
-            {tr.withdrawCommission}
-          </button>
+        {/* Mobile Search Bar */}
+        <div className="mt-2.5 md:hidden">
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder={
+                language === 'sw'
+                  ? 'Tafuta mboga, nyanya, mchele, samaki, nyama...'
+                  : 'Search vegetables, rice, fish, meat...'
+              }
+              className="w-full pl-9 pr-8 py-2 text-xs bg-stone-50 border border-stone-300 rounded-lg text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+            />
+            <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            {searchQuery && (
+              <button
+                onClick={() => onSearchChange('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </header>
