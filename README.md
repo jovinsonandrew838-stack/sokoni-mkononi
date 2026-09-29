@@ -27,11 +27,17 @@
    - Usafirishaji mlangoni ndani ya masaa 1 - 2 kwa Dar es Salaam (Kigamboni, Ilala, Kinondoni, Temeke, Ubungo) na mikoa ya Arusha, Mwanza, Dodoma na Zanzibar.
 3. **Malipo Salama:**
    - Lipa kirahisi kupitia M-Pesa, Tigo Pesa, Airtel Money, HaloPesa au Lipa Unapopokea (Cash on Delivery).
-4. **Vifurushi vya Malipo ya Kila Mwezi kwa Wafanyabiashara:**
+4. **🧺 Vikapu Maalum vya Wiki kwa Ajili ya Wateja (Weekly Grocery Baskets):**
+   - **Kikapu cha Bajeti / Watu Binafsi (TZS 18,000):** Mchele wa Kyela, Nyanya, Vitunguu, Maharage, Mchicha na Ndizi mbivu (Watu 1-2).
+   - **Kikapu cha Afya, Matunda & Detox (TZS 28,000):** Tikiti maji kubwa, Pasheni za Iringa, Ndizi mbivu, Tangawizi, Ndimu na Asali ya Tabora.
+   - **Kikapu cha Supu Nzito & Chemsha (TZS 35,000):** Kuku mzima wa kienyeji, Ndizi za kupika, Tangawizi, Vitunguu saumu, Karoti na Ndimu.
+   - **Kikapu cha Familia ya Kawaida (TZS 45,000 - Maarufu ⭐):** Nyama ya ng'ombe fresh, Mchele Kyela, Nyanya, Vitunguu, Mboga za majani, Karoti, Hoho, Nazi na Mafuta ya alizeti (Watu 3-5).
+   - **Kikapu Kikubwa cha Familia / Wikendi (TZS 75,000):** Nyama ya ng'ombe, Samaki Sato wa Ziwa Victoria, Kuku wa kienyeji, Unga wa Sembe, Mchele, Nyanya tenga zima na Dagaa wa Kigoma (Watu 6-10).
+5. **Vifurushi vya Malipo ya Kila Mwezi kwa Wafanyabiashara:**
    - **Kifurushi cha Msingi (TZS 2,000 / mwezi):** Kuweka hadi bidhaa 10 mtandaoni, kupokea oda moja kwa moja kwa SMS/WhatsApp, na malipo ya papo hapo simuni.
    - **Biashara Plus / Fedha (TZS 5,000 / mwezi - Maarufu):** Kuweka hadi bidhaa 35, Alama ya Duka Lililothibitishwa (Verified ✓), kuonekana juu kwenye orodha ya masoko, na ripoti za mauzo.
    - **VIP Mfanyabiashara Mkubwa (TZS 10,000 / mwezi):** Bidhaa bila kikomo, Baji ya Dhahabu (Gold VIP ⭐), Tangazo maalum juu ya tovuti (Featured banner), dereva wa kipaumbele (VIP dispatch), na msimamizi maalum wa akaunti.
-5. **Mapishi ya Soko:**
+6. **Mapishi ya Soko:**
    - Miongozo ya kuandaa vyakula vya asili kama Supu Nzito ya Kuku wa Kienyeji na Ndizi, Wali wa Nazi na Samaki Sato, na Ugali wa Sembe.
 
 ---

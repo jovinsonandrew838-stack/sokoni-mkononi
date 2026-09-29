@@ -113,6 +113,39 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             </div>
 
+            {/* Customer Weekly Baskets CTA Banner */}
+            <div className="pt-2">
+              <a
+                href="#vikapu-vya-wiki"
+                className="block bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 border border-emerald-400/40 rounded-2xl p-3.5 sm:p-4 text-left transition-all shadow-lg hover:shadow-emerald-900/30 group"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl sm:text-3xl">🧺</span>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="bg-amber-400 text-stone-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-md">
+                          {language === 'sw' ? 'Vifurushi vya Wateja' : 'Customer Packages'}
+                        </span>
+                        <span className="text-xs sm:text-sm font-extrabold text-white">
+                          {language === 'sw' ? 'Vikapu Maalum vya Wiki (Kuanzia 18,000/=)' : 'Weekly Grocery Baskets (From 18,000/=)'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-emerald-100 mt-0.5">
+                        {language === 'sw'
+                          ? 'Mchele, nyama, samaki, mboga na matunda ya wiki nzima kwa mkupuo mmoja. Okoa hadi TZS 17,000!'
+                          : 'Rice, meats, fish, fresh greens and fruit packages for the entire week. Save up to TZS 17,000!'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 text-xs font-bold text-amber-300 group-hover:text-white transition-colors self-end sm:self-auto shrink-0">
+                    <span>{language === 'sw' ? 'Angalia Vikapu Hapa' : 'Explore Baskets'}</span>
+                    <span>→</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+
             {/* Small Vendors Registration & Monthly Packages Prompt Bar */}
             <div className="pt-2">
               <div className="bg-amber-400/15 border border-amber-300/30 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left">

@@ -174,6 +174,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>{language === 'sw' ? 'SW' : 'EN'}</span>
             </button>
 
+            {/* Customer Weekly Baskets Quick Link */}
+            <a
+              href="#vikapu-vya-wiki"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
+              title={language === 'sw' ? 'Tazama vikapu maalum vya wiki vya familia' : 'View weekly family baskets'}
+            >
+              <span>🧺</span>
+              <span className="hidden sm:inline">
+                {language === 'sw' ? 'Vikapu vya Wiki' : 'Weekly Baskets'}
+              </span>
+            </a>
+
             {/* Packages Trigger Button */}
             {onOpenPackagesModal && (
               <button

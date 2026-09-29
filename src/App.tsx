@@ -13,6 +13,7 @@ import { CartDrawer } from './components/CartDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
 import { VendorRegistrationModal } from './components/VendorRegistrationModal';
 import { PackagesModal } from './components/PackagesModal';
+import { WeeklyBasketsSection } from './components/WeeklyBasketsSection';
 import { RecipesSection } from './components/RecipesSection';
 import { ReviewsSection } from './components/ReviewsSection';
 import { Footer } from './components/Footer';
@@ -273,6 +274,13 @@ export default function App() {
           }}
           onOpenPackagesModal={() => setIsPackagesModalOpen(true)}
           vendorsCount={registeredVendors.length}
+        />
+
+        {/* Specialized Weekly Baskets Section for Customers */}
+        <WeeklyBasketsSection
+          language={language}
+          onAddToCart={handleAddToCart}
+          onOpenDetails={(p) => setDetailProduct(p)}
         />
 
         {/* Product Catalog Section */}
