@@ -1,0 +1,6 @@
+{
+  "name": "LipaPay Masoko - Mfumo wa Malipo na Kamisheni ya 5% (Masoko ya Dar)",
+  "description": "Mfumo wa kisasa wa kuunganisha wateja na wauza mboga mboga wa masoko ya Dar es Salaam (Kariakoo, Ilala, Tandale, Buguruni) wenye gawio la moja kwa moja la asilimia tano (5% commission split) kwa mmiliki wa website na 95% kwa muuzaji.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
