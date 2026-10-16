@@ -20,6 +20,7 @@ export interface OrderDetails {
   total: number;
   notes?: string;
   createdAt: string;
+  status: 'pending' | 'processing' | 'out_for_delivery' | 'delivered' | 'cancelled';
 }
 
 export type PackageTier = 'starter' | 'pro' | 'vip';

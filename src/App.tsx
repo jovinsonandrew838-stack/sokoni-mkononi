@@ -17,6 +17,7 @@ import { WeeklyBasketsSection } from './components/WeeklyBasketsSection';
 import { RecipesSection } from './components/RecipesSection';
 import { ReviewsSection } from './components/ReviewsSection';
 import { Footer } from './components/Footer';
+import { AdminDashboard } from './components/AdminDashboard';
 import { PRODUCTS, DELIVERY_ZONES, DeliveryZone, Product } from './data/products';
 import { CartItem, Language, OrderDetails, PackageTier, Vendor } from './types';
 import { Sparkles, SlidersHorizontal, RefreshCw, CheckCircle2, ShoppingBag, MessageCircle } from 'lucide-react';
@@ -80,6 +81,109 @@ export default function App() {
   const [isPackagesModalOpen, setIsPackagesModalOpen] = useState(false);
   const [preselectedTier, setPreselectedTier] = useState<PackageTier>('starter');
   const [notification, setNotification] = useState<string | null>(null);
+  const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState(false);
+
+  // Live Orders State for Admin Management
+  const [orders, setOrders] = useState<OrderDetails[]>([
+    {
+      orderId: 'ORD-8821',
+      customerName: 'Amina Salum',
+      phone: '0712 345 678',
+      deliveryZone: 'Kigamboni (Dar es Salaam)',
+      streetAddress: 'Mtaa wa Mjimwema, Nyumba Na. 14',
+      paymentMethod: 'mpesa',
+      items: [
+        { product: PRODUCTS[0], quantity: 2 },
+        { product: PRODUCTS[2], quantity: 1 },
+      ],
+      subtotal: 21500,
+      deliveryFee: 2000,
+      total: 23500,
+      notes: 'Tafadhali samaki asafishwe na kukatwa vipande.',
+      createdAt: 'Leo, 07:45 Asubuhi',
+      status: 'out_for_delivery',
+    },
+    {
+      orderId: 'ORD-8820',
+      customerName: 'Baraka John Mwita',
+      phone: '0765 890 123',
+      deliveryZone: 'Kinondoni & Mikocheni',
+      streetAddress: 'Mikocheni B, Karibu na Shoppers Plaza',
+      paymentMethod: 'tigopesa',
+      items: [
+        { product: PRODUCTS[1], quantity: 2 },
+        { product: PRODUCTS[5], quantity: 1 },
+      ],
+      subtotal: 42000,
+      deliveryFee: 4000,
+      total: 46000,
+      notes: 'Piga simu ukifika getini.',
+      createdAt: 'Leo, 08:15 Asubuhi',
+      status: 'processing',
+    },
+    {
+      orderId: 'ORD-8819',
+      customerName: 'Fatma Rashid',
+      phone: '0688 234 567',
+      deliveryZone: 'Ilala & Kariakoo',
+      streetAddress: 'Mtaa wa Uhuru, Ghorofa ya 3',
+      paymentMethod: 'cash',
+      items: [
+        { product: PRODUCTS[3], quantity: 1 },
+        { product: PRODUCTS[4], quantity: 3 },
+      ],
+      subtotal: 18500,
+      deliveryFee: 3500,
+      total: 22000,
+      notes: 'Lipa kwa fedha taslimu nikipokea.',
+      createdAt: 'Jana jioni',
+      status: 'delivered',
+    },
+    {
+      orderId: 'ORD-8818',
+      customerName: 'Juma Hassan',
+      phone: '0744 112 233',
+      deliveryZone: 'Temeke & Chang\'ombe',
+      streetAddress: 'Tazara, Karibu na Uwanja wa Taifa',
+      paymentMethod: 'airtel',
+      items: [
+        { product: PRODUCTS[2], quantity: 2 },
+      ],
+      subtotal: 35000,
+      deliveryFee: 3500,
+      total: 38500,
+      createdAt: 'Jana asubuhi',
+      status: 'delivered',
+    },
+  ]);
+
+  const handleUpdateOrderStatus = (orderId: string, newStatus: OrderDetails['status']) => {
+    setOrders((prev) =>
+      prev.map((o) => (o.orderId === orderId ? { ...o, status: newStatus } : o))
+    );
+    triggerNotification(
+      language === 'sw'
+        ? `Hali ya oda ${orderId} imesasishwa kuwa "${newStatus}"`
+        : `Order ${orderId} status updated to "${newStatus}"`
+    );
+  };
+
+  const handleUpdateProductPrice = (productId: string, newPrice: number) => {
+    setProductsList((prev) =>
+      prev.map((p) => (p.id === productId ? { ...p, price: newPrice } : p))
+    );
+    triggerNotification(
+      language === 'sw'
+        ? `Bei ya asubuhi imesasishwa kuwa TSh ${newPrice.toLocaleString()}`
+        : `Product price updated to TSh ${newPrice.toLocaleString()}`
+    );
+  };
+
+  const handleToggleProductStock = (productId: string) => {
+    setProductsList((prev) =>
+      prev.map((p) => (p.id === productId ? { ...p, inStock: !p.inStock } : p))
+    );
+  };
 
   // Cart operations
   const handleAddToCart = (product: Product) => {
@@ -259,10 +363,24 @@ export default function App() {
           setIsVendorModalOpen(true);
         }}
         onOpenPackagesModal={() => setIsPackagesModalOpen(true)}
+        onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
         vendorsCount={registeredVendors.length}
       />
 
-      <main className="flex-1">
+      {isAdminDashboardOpen ? (
+        <AdminDashboard
+          language={language}
+          onClose={() => setIsAdminDashboardOpen(false)}
+          orders={orders}
+          onUpdateOrderStatus={handleUpdateOrderStatus}
+          vendors={registeredVendors}
+          products={productsList}
+          onUpdateProductPrice={handleUpdateProductPrice}
+          onToggleProductStock={handleToggleProductStock}
+        />
+      ) : (
+        <>
+          <main className="flex-1">
         {/* Hero Banner & Category Filter Strip */}
         <HeroSection
           language={language}
@@ -450,6 +568,8 @@ export default function App() {
         selectedZone={selectedZone}
         language={language}
         onOrderSuccess={(order) => {
+          // Add new order to live orders list for admin dashboard
+          setOrders((prev) => [order, ...prev]);
           // Clear cart on successful order
           setCart([]);
         }}
@@ -504,6 +624,8 @@ export default function App() {
           {language === 'sw' ? 'WhatsApp (0704 205 872)' : 'WhatsApp (0704 205 872)'}
         </span>
       </a>
+      </>
+    )}
     </div>
   );
 }

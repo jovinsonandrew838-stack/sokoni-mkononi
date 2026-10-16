@@ -64,6 +64,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         total,
         notes,
         createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        status: 'pending',
       };
       setCreatedOrder(newOrder);
       setStep('success');
