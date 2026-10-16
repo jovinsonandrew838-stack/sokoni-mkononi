@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Mail, MapPin, Clock, ShieldCheck, Heart, Sparkles, Globe, MessageCircle, Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, ShieldCheck, Heart, Sparkles, Globe, MessageCircle, Instagram, Facebook, Twitter, Youtube, Download } from 'lucide-react';
 import { Language } from '../types';
 
 interface FooterProps {
@@ -204,10 +204,20 @@ export const Footer: React.FC<FooterProps> = ({ language, onOpenVendorModal }) =
         {/* Bottom Bar */}
         <div className="mt-8 pt-6 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between text-[11px] text-stone-500 gap-3">
           <p>© {new Date().getFullYear()} Sokoni Mkononi (www.sokonimkononi.co.tz). {language === 'sw' ? 'Haki zote zimehifadhiwa.' : 'All rights reserved.'}</p>
-          <p className="flex items-center gap-1">
-            <span>{language === 'sw' ? 'Imetengenezwa Kigamboni Ferry kwa ajili ya Watanzania' : 'Crafted at Kigamboni Ferry for Tanzanians'}</span>
-            <Heart className="w-3 h-3 text-red-500 fill-red-500" />
-          </p>
+          <div className="flex items-center gap-4">
+            <a
+              href="/sokoni-mkononi-source-code.zip"
+              download="sokoni-mkononi-source-code.zip"
+              className="flex items-center gap-1.5 px-3 py-1 bg-stone-800 hover:bg-stone-700 text-amber-300 font-bold rounded-lg border border-stone-700 transition-colors"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Pakua Source Code (ZIP)</span>
+            </a>
+            <p className="flex items-center gap-1">
+              <span>{language === 'sw' ? 'Imetengenezwa Kigamboni Ferry kwa ajili ya Watanzania' : 'Crafted at Kigamboni Ferry for Tanzanians'}</span>
+              <Heart className="w-3 h-3 text-red-500 fill-red-500" />
+            </p>
+          </div>
         </div>
       </div>
     </footer>

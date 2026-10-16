@@ -234,7 +234,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900 flex flex-col font-sans selection:bg-emerald-200">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-stone-50 text-stone-900 flex flex-col font-sans selection:bg-emerald-200 relative">
       {/* Toast Notification */}
       {notification && (
         <div className="fixed bottom-6 right-6 z-50 bg-stone-900 text-white px-4 py-3 rounded-xl shadow-xl border border-stone-700 flex items-center gap-2.5 text-xs sm:text-sm animate-in fade-in slide-in-from-bottom-2 duration-200">
@@ -455,6 +455,41 @@ export default function App() {
         }}
       />
 
+      {/* Sticky Bottom Cart Bar (appears when items are in cart for instant access) */}
+      {cart.length > 0 && !isCartOpen && !isCheckoutOpen && (
+        <div className="fixed bottom-5 left-4 right-4 sm:left-6 sm:right-auto z-30 flex items-center justify-center">
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className="w-full sm:w-auto bg-stone-900/95 hover:bg-stone-950 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center justify-between sm:justify-start gap-4 border-2 border-emerald-500 backdrop-blur-md transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="relative w-9 h-9 rounded-xl bg-emerald-700 flex items-center justify-center text-white shrink-0">
+                <ShoppingBag className="w-5 h-5 text-amber-300" />
+                <span className="absolute -top-1.5 -right-1.5 bg-amber-400 text-stone-950 font-black text-[10px] rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center shadow-xs">
+                  {cart.reduce((sum, i) => sum + i.quantity, 0)}
+                </span>
+              </div>
+              <div className="text-left">
+                <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <span>{language === 'sw' ? 'Kikapu Chako' : 'Your Basket'}</span>
+                  <span className="text-stone-400 font-normal">
+                    ({cart.reduce((sum, i) => sum + i.quantity, 0)} {language === 'sw' ? 'vitu' : 'items'})
+                  </span>
+                </div>
+                <div className="text-sm font-extrabold text-emerald-400 leading-tight">
+                  TSh {cart.reduce((sum, i) => sum + i.product.price * i.quantity, 0).toLocaleString()}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-300 group-hover:text-amber-200 bg-white/10 px-3 py-1.5 rounded-xl shrink-0">
+              <span>{language === 'sw' ? 'Angalia Kikapu' : 'View Basket'}</span>
+              <span>→</span>
+            </div>
+          </button>
+        </div>
+      )}
+
       {/* Floating WhatsApp Support Button */}
       <a
         href="https://wa.me/255704205872?text=Habari%20Sokoni%20Mkononi,%20nahitaji%20msaada%20wa%20kuweka%20oda"
@@ -466,7 +501,7 @@ export default function App() {
       >
         <MessageCircle className="w-5 h-5 fill-white" />
         <span className="hidden sm:inline font-bold text-xs pr-1">
-          {language === 'sw' ? 'Msaada / WhatsApp (0704 205 872)' : 'WhatsApp (0704 205 872)'}
+          {language === 'sw' ? 'WhatsApp (0704 205 872)' : 'WhatsApp (0704 205 872)'}
         </span>
       </a>
     </div>

@@ -35,29 +35,38 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const total = subtotal + deliveryFee;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-hidden flex justify-end">
       {/* Backdrop */}
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-stone-900/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-stone-950/75 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-white border-l border-stone-200 shadow-2xl flex flex-col">
+      <div className="relative w-full sm:max-w-md h-full bg-white shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-300 ease-out">
           {/* Header */}
-          <div className="p-4 sm:p-5 border-b border-stone-200 flex items-center justify-between bg-stone-50">
-            <div className="flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 text-emerald-700" />
-              <h2 className="font-extrabold text-stone-900 text-lg">
-                {language === 'sw' ? 'Kikapu Chako' : 'Your Basket'}
-              </h2>
-              <span className="text-xs font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
-                {items.reduce((sum, item) => sum + item.quantity, 0)} {language === 'sw' ? 'vitu' : 'items'}
-              </span>
+          <div className="p-4 sm:p-5 border-b border-stone-200 flex items-center justify-between bg-emerald-50/80">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0">
+                <ShoppingBag className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="font-extrabold text-stone-900 text-lg leading-tight">
+                    {language === 'sw' ? 'Kikapu Chako' : 'Your Basket'}
+                  </h2>
+                  <span className="text-xs font-bold bg-emerald-700 text-white px-2 py-0.5 rounded-full">
+                    {items.reduce((sum, item) => sum + item.quantity, 0)} {language === 'sw' ? 'vitu' : 'items'}
+                  </span>
+                </div>
+                <p className="text-[11px] text-stone-500 font-medium">
+                  {language === 'sw' ? 'Hakiki oda yako kabla ya malipo' : 'Review your order before checkout'}
+                </p>
+              </div>
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-200/60 transition-colors"
+              className="p-2 rounded-xl text-stone-500 hover:text-stone-900 hover:bg-stone-200/80 transition-colors cursor-pointer"
+              title={language === 'sw' ? 'Funga Kikapu' : 'Close Basket'}
             >
               <X className="w-5 h-5" />
             </button>
@@ -227,6 +236,5 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           )}
         </div>
       </div>
-    </div>
   );
 };
