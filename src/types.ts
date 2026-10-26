@@ -3,91 +3,84 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export interface Product {
-  id: string;
-  name_sw: string;
-  name_en: string;
-  category: 'mboga' | 'matunda' | 'nyama' | 'nafaka' | 'mafuta' | 'viungo';
-  price: number;
-  original_price: number;
-  unit: string;
-  origin: string;
-  in_stock: boolean;
-  stock_quantity: number;
-  rating: number;
-  reviews_count: number;
-  description_sw: string;
-  image_url: string;
+import { Product } from './data/products';
+
+export interface CartItem {
+  product: Product;
+  quantity: number;
 }
 
-export type SubscriptionPlan = 'starter' | 'pro' | 'vip';
+export type Language = 'sw' | 'en';
+
+export interface OrderDetails {
+  orderId: string;
+  customerName: string;
+  phone: string;
+  deliveryZone: string;
+  streetAddress: string;
+  paymentMethod: 'mpesa' | 'tigopesa' | 'airtel' | 'halopesa' | 'cash';
+  items: CartItem[];
+  subtotal: number;
+  deliveryFee: number;
+  total: number;
+  notes?: string;
+  createdAt: string;
+  status: 'pending' | 'processing' | 'out_for_delivery' | 'delivered' | 'cancelled';
+}
+
+export type PackageTier = 'starter' | 'pro' | 'vip';
+
+export interface VendorPackage {
+  id: PackageTier;
+  priceTZS: number; // 2000, 5000, 10000
+  titleSw: string;
+  titleEn: string;
+  taglineSw: string;
+  taglineEn: string;
+  popular?: boolean;
+  maxProducts: number;
+  featuresSw: string[];
+  featuresEn: string[];
+  badgeColor: string;
+}
 
 export interface Vendor {
   id: string;
-  business_name: string;
-  owner_name: string;
+  businessName: string;
+  ownerName: string;
   phone: string;
-  market_name: string; // e.g. Kariakoo, Tandale, Ilala, Temeke Stereo, Kisutu, Buguruni
-  stall_number: string;
+  marketName: string; // e.g. Kariakoo, Tandale, Ilala, Temeke Stereo, Kisutu, Buguruni
+  stallNumber: string;
   category: string;
   city: string;
-  subscription_plan: SubscriptionPlan;
-  subscription_price_tzs: number;
-  status: 'active' | 'pending' | 'suspended';
-  registered_at: string;
-}
-
-export interface Order {
-  id: string;
-  customer_name: string;
-  phone: string;
-  delivery_zone: string;
-  street_address: string;
-  payment_method: 'mpesa' | 'tigopesa' | 'airtel' | 'halopesa' | 'cash';
-  subtotal: number;
-  delivery_fee: number;
-  total: number;
-  status: 'pending' | 'processing' | 'out_for_delivery' | 'delivered' | 'cancelled';
-  notes?: string;
-  created_at: string;
-}
-
-export interface OrderItem {
-  id: string;
-  order_id: string;
-  product_id: string;
-  product_name: string;
-  quantity: number;
-  unit_price: number;
-  total_price: number;
+  registeredAt: string;
+  status: 'active' | 'pending';
+  productsCount: number;
+  
+  // Vifurushi vya Kila Mwezi
+  subscriptionPlan: PackageTier;
+  subscriptionPriceTZS: number; // 2000, 5000, 10000
+  subscriptionBillingCycle: 'monthly';
+  registrationFeePaid: boolean;
+  registrationFeeTZS: number;
+  paymentMethod?: string;
+  paymentRef?: string;
 }
 
 export interface Customer {
   id: string;
-  full_name: string;
+  fullName: string;
   phone: string;
-  default_zone: string;
-  default_street: string;
-  total_orders: number;
-  registered_at: string;
+  defaultZone: string;
+  totalOrders: number;
+  registeredAt: string;
 }
 
-export interface InventoryLog {
-  id: string;
-  product_id: string;
-  product_name: string;
-  change_amount: number;
-  reason: 'sale' | 'restock' | 'adjustment' | 'spoilage';
-  created_at: string;
-}
-
-export type TableName = 'products' | 'vendors' | 'orders' | 'order_items' | 'customers' | 'inventory_logs';
+export type TableName = 'products' | 'vendors' | 'orders' | 'customers';
 
 export interface DatabaseState {
   products: Product[];
   vendors: Vendor[];
-  orders: Order[];
-  order_items: OrderItem[];
+  orders: OrderDetails[];
   customers: Customer[];
-  inventory_logs: InventoryLog[];
 }

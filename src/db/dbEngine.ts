@@ -3,10 +3,132 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DatabaseState, Product, Vendor, Order, OrderItem, Customer, TableName } from '../types';
-import { INITIAL_DATABASE } from './initialData';
+import { Product, PRODUCTS } from '../data/products';
+import { OrderDetails, Vendor } from '../types';
 
-const STORAGE_KEY = 'sokoni_mkononi_database_v1';
+const STORAGE_KEY_ORDERS = 'sokoni_mkononi_orders_v1';
+const STORAGE_KEY_VENDORS = 'sokoni_mkononi_vendors_v1';
+const STORAGE_KEY_PRODUCTS = 'sokoni_mkononi_products_v1';
+
+export const INITIAL_ORDERS: OrderDetails[] = [
+  {
+    orderId: 'ORD-8821',
+    customerName: 'Amina Salum',
+    phone: '0712 345 678',
+    deliveryZone: 'Kigamboni (Dar es Salaam)',
+    streetAddress: 'Mtaa wa Mjimwema, Nyumba Na. 14',
+    paymentMethod: 'mpesa',
+    items: [
+      { product: PRODUCTS[0], quantity: 2 },
+      { product: PRODUCTS[2], quantity: 1 },
+    ],
+    subtotal: 21500,
+    deliveryFee: 2000,
+    total: 23500,
+    notes: 'Tafadhali samaki asafishwe na kukatwa vipande.',
+    createdAt: 'Leo, 07:45 Asubuhi',
+    status: 'out_for_delivery',
+  },
+  {
+    orderId: 'ORD-8820',
+    customerName: 'Baraka John Mwita',
+    phone: '0765 890 123',
+    deliveryZone: 'Kinondoni & Mikocheni',
+    streetAddress: 'Mikocheni B, Karibu na Shoppers Plaza',
+    paymentMethod: 'tigopesa',
+    items: [
+      { product: PRODUCTS[1], quantity: 2 },
+      { product: PRODUCTS[5], quantity: 1 },
+    ],
+    subtotal: 42000,
+    deliveryFee: 4000,
+    total: 46000,
+    notes: 'Piga simu ukifika getini.',
+    createdAt: 'Jana, 04:20 Jioni',
+    status: 'delivered',
+  },
+  {
+    orderId: 'ORD-8819',
+    customerName: 'Jovinson Andrew',
+    phone: '0704 205 872',
+    deliveryZone: 'Sinza & Mwenge',
+    streetAddress: 'Sinza Palestina, Mkabala na Hospitali',
+    paymentMethod: 'mpesa',
+    items: [
+      { product: PRODUCTS[4], quantity: 5 },
+      { product: PRODUCTS[6], quantity: 2 },
+    ],
+    subtotal: 19000,
+    deliveryFee: 2500,
+    total: 21500,
+    notes: 'Weka kwenye mfuko maalum wa mazao.',
+    createdAt: 'Leo, 08:15 Asubuhi',
+    status: 'pending',
+  },
+];
+
+export const INITIAL_VENDORS: Vendor[] = [
+  {
+    id: 'VND-1042',
+    businessName: 'Genge la Mama Neema',
+    ownerName: 'Neema Joseph',
+    phone: '0704 205 872',
+    marketName: 'Soko la Kigamboni Ferry',
+    stallNumber: 'Fremu Na. 04, Mkabili wa Kivuko cha Ferry',
+    category: 'mboga',
+    city: 'Dar es Salaam',
+    registeredAt: '2026-09-20',
+    status: 'active',
+    productsCount: 12,
+    subscriptionPlan: 'pro',
+    subscriptionPriceTZS: 5000,
+    subscriptionBillingCycle: 'monthly',
+    registrationFeePaid: true,
+    registrationFeeTZS: 5000,
+    paymentMethod: 'mpesa',
+    paymentRef: 'MP260920.0911.A1',
+  },
+  {
+    id: 'VND-2088',
+    businessName: 'Mwaloni Fresh Fish Supply',
+    ownerName: 'Hamisi Bakari',
+    phone: '0655 444 333',
+    marketName: 'Soko Kuu la Mwanza (Mwaloni)',
+    stallNumber: 'Fremu 08, Eneo la Samaki',
+    category: 'nyama',
+    city: 'Mwanza',
+    registeredAt: '2026-09-22',
+    status: 'active',
+    productsCount: 8,
+    subscriptionPlan: 'vip',
+    subscriptionPriceTZS: 10000,
+    subscriptionBillingCycle: 'monthly',
+    registrationFeePaid: true,
+    registrationFeeTZS: 10000,
+    paymentMethod: 'tigopesa',
+    paymentRef: 'TP260922.1402.B2',
+  },
+  {
+    id: 'VND-3012',
+    businessName: 'Nafaka Safi Dodoma & Kyela',
+    ownerName: 'Mzee Mwakatobe',
+    phone: '0768 998 877',
+    marketName: 'Soko Kuu la Kariakoo',
+    stallNumber: 'Fremu Na. 42, Ghorofa ya Chini',
+    category: 'nafaka',
+    city: 'Dar es Salaam',
+    registeredAt: '2026-10-01',
+    status: 'active',
+    productsCount: 15,
+    subscriptionPlan: 'starter',
+    subscriptionPriceTZS: 2000,
+    subscriptionBillingCycle: 'monthly',
+    registrationFeePaid: true,
+    registrationFeeTZS: 2000,
+    paymentMethod: 'airtel',
+    paymentRef: 'AT261001.1100.C3',
+  },
+];
 
 export class DatabaseEngine {
   private static instance: DatabaseEngine;
@@ -20,264 +142,102 @@ export class DatabaseEngine {
     return DatabaseEngine.instance;
   }
 
-  public getDatabase(): DatabaseState {
+  // Orders
+  public getOrders(): OrderDetails[] {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        return JSON.parse(stored);
-      }
+      const data = localStorage.getItem(STORAGE_KEY_ORDERS);
+      if (data) return JSON.parse(data);
     } catch (e) {
-      console.error('Error reading database from storage:', e);
+      console.error(e);
     }
-    // Seed initial database
-    this.saveDatabase(INITIAL_DATABASE);
-    return INITIAL_DATABASE;
+    this.saveOrders(INITIAL_ORDERS);
+    return INITIAL_ORDERS;
   }
 
-  public saveDatabase(state: DatabaseState): void {
+  public saveOrders(orders: OrderDetails[]): void {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
     } catch (e) {
-      console.error('Error writing database to storage:', e);
+      console.error(e);
     }
   }
 
-  public resetDatabase(): DatabaseState {
-    this.saveDatabase(INITIAL_DATABASE);
-    return INITIAL_DATABASE;
+  public addOrder(order: OrderDetails): void {
+    const orders = this.getOrders();
+    const updated = [order, ...orders];
+    this.saveOrders(updated);
   }
 
-  // --- Products CRUD ---
-  public addProduct(product: Omit<Product, 'id' | 'rating' | 'reviews_count'>): Product {
-    const db = this.getDatabase();
-    const newProduct: Product = {
-      ...product,
-      id: `PRD-${Date.now().toString().slice(-4)}`,
-      rating: 5.0,
-      reviews_count: 1,
-    };
-    db.products.unshift(newProduct);
-    this.saveDatabase(db);
-    return newProduct;
+  public updateOrderStatus(orderId: string, status: OrderDetails['status']): void {
+    const orders = this.getOrders();
+    const updated = orders.map((o) => (o.orderId === orderId ? { ...o, status } : o));
+    this.saveOrders(updated);
   }
 
-  public updateProduct(id: string, updates: Partial<Product>): void {
-    const db = this.getDatabase();
-    db.products = db.products.map((p) => (p.id === id ? { ...p, ...updates } : p));
-    this.saveDatabase(db);
-  }
-
-  public deleteProduct(id: string): void {
-    const db = this.getDatabase();
-    db.products = db.products.filter((p) => p.id !== id);
-    this.saveDatabase(db);
-  }
-
-  // --- Orders CRUD ---
-  public createOrder(
-    orderData: Omit<Order, 'id' | 'created_at'>,
-    items: Array<{ product_id: string; product_name: string; quantity: number; unit_price: number }>
-  ): Order {
-    const db = this.getDatabase();
-    const orderId = `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
-    const createdAt = new Date().toISOString();
-
-    const newOrder: Order = {
-      ...orderData,
-      id: orderId,
-      created_at: createdAt,
-    };
-
-    db.orders.unshift(newOrder);
-
-    // Save order items
-    items.forEach((item, index) => {
-      const orderItem: OrderItem = {
-        id: `ITEM-${orderId}-${index + 1}`,
-        order_id: orderId,
-        product_id: item.product_id,
-        product_name: item.product_name,
-        quantity: item.quantity,
-        unit_price: item.unit_price,
-        total_price: item.quantity * item.unit_price,
-      };
-      db.order_items.unshift(orderItem);
-
-      // Deduct stock quantity
-      const prod = db.products.find((p) => p.id === item.product_id);
-      if (prod) {
-        prod.stock_quantity = Math.max(0, prod.stock_quantity - item.quantity);
-        if (prod.stock_quantity === 0) prod.in_stock = false;
-      }
-    });
-
-    // Update or insert customer
-    const existingCust = db.customers.find((c) => c.phone === orderData.phone);
-    if (existingCust) {
-      existingCust.total_orders += 1;
-    } else {
-      db.customers.push({
-        id: `CUST-${Math.floor(100 + Math.random() * 900)}`,
-        full_name: orderData.customer_name,
-        phone: orderData.phone,
-        default_zone: orderData.delivery_zone,
-        default_street: orderData.street_address,
-        total_orders: 1,
-        registered_at: createdAt,
-      });
+  // Vendors
+  public getVendors(): Vendor[] {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY_VENDORS);
+      if (data) return JSON.parse(data);
+    } catch (e) {
+      console.error(e);
     }
-
-    this.saveDatabase(db);
-    return newOrder;
+    this.saveVendors(INITIAL_VENDORS);
+    return INITIAL_VENDORS;
   }
 
-  public updateOrderStatus(orderId: string, status: Order['status']): void {
-    const db = this.getDatabase();
-    db.orders = db.orders.map((o) => (o.id === orderId ? { ...o, status } : o));
-    this.saveDatabase(db);
+  public saveVendors(vendors: Vendor[]): void {
+    try {
+      localStorage.setItem(STORAGE_KEY_VENDORS, JSON.stringify(vendors));
+    } catch (e) {
+      console.error(e);
+    }
   }
 
-  public deleteOrder(orderId: string): void {
-    const db = this.getDatabase();
-    db.orders = db.orders.filter((o) => o.id !== orderId);
-    db.order_items = db.order_items.filter((i) => i.order_id !== orderId);
-    this.saveDatabase(db);
+  public addVendor(vendor: Vendor): void {
+    const vendors = this.getVendors();
+    const updated = [vendor, ...vendors];
+    this.saveVendors(updated);
   }
 
-  // --- Vendors CRUD ---
-  public addVendor(vendorData: Omit<Vendor, 'id' | 'registered_at'>): Vendor {
-    const db = this.getDatabase();
-    const newVendor: Vendor = {
-      ...vendorData,
-      id: `VND-${Math.floor(1000 + Math.random() * 9000)}`,
-      registered_at: new Date().toISOString(),
-    };
-    db.vendors.unshift(newVendor);
-    this.saveDatabase(db);
-    return newVendor;
+  // Products
+  public getProducts(): Product[] {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY_PRODUCTS);
+      if (data) return JSON.parse(data);
+    } catch (e) {
+      console.error(e);
+    }
+    this.saveProducts(PRODUCTS);
+    return PRODUCTS;
   }
 
-  public updateVendorStatus(id: string, status: Vendor['status']): void {
-    const db = this.getDatabase();
-    db.vendors = db.vendors.map((v) => (v.id === id ? { ...v, status } : v));
-    this.saveDatabase(db);
+  public saveProducts(products: Product[]): void {
+    try {
+      localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(products));
+    } catch (e) {
+      console.error(e);
+    }
   }
 
-  public deleteVendor(id: string): void {
-    const db = this.getDatabase();
-    db.vendors = db.vendors.filter((v) => v.id !== id);
-    this.saveDatabase(db);
+  public updateProductPrice(productId: string, newPrice: number): void {
+    const products = this.getProducts();
+    const updated = products.map((p) => (p.id === productId ? { ...p, price: newPrice } : p));
+    this.saveProducts(updated);
   }
 
-  // --- SQL Schema Generator ---
-  public generateSQLScript(dialect: 'postgres' | 'mysql' = 'postgres'): string {
-    if (dialect === 'postgres') {
-      return `-- =========================================================
+  public toggleProductStock(productId: string): void {
+    const products = this.getProducts();
+    const updated = products.map((p) => (p.id === productId ? { ...p, inStock: !p.inStock } : p));
+    this.saveProducts(updated);
+  }
+
+  // SQL Script generator
+  public generateSQL(): string {
+    return `-- =========================================================
 -- DATABASE SCHEMA: Sokoni Mkononi (Digital Fresh Market)
 -- Dialect: PostgreSQL (Supabase / Cloud SQL / Neon / Self-Hosted)
--- Created by AI Studio Database Engine
 -- =========================================================
-
--- Wezesha UUID au Serial
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
--- 1. Majedwali ya Wafanyabiashara wa Masoko (Vendors)
-CREATE TABLE IF NOT EXISTS vendors (
-    id VARCHAR(32) PRIMARY KEY,
-    business_name VARCHAR(150) NOT NULL,
-    owner_name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20) NOT NULL,
-    market_name VARCHAR(100) NOT NULL, -- e.g. Kariakoo, Tandale, Ilala, Kigamboni
-    stall_number VARCHAR(50),
-    category VARCHAR(50) NOT NULL,
-    city VARCHAR(50) DEFAULT 'Dar es Salaam',
-    subscription_plan VARCHAR(20) DEFAULT 'starter', -- starter, pro, vip
-    subscription_price_tzs INTEGER DEFAULT 2000,
-    status VARCHAR(20) DEFAULT 'active', -- active, pending, suspended
-    registered_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
--- 2. Majedwali ya Bidhaa (Products)
-CREATE TABLE IF NOT EXISTS products (
-    id VARCHAR(32) PRIMARY KEY,
-    name_sw VARCHAR(150) NOT NULL,
-    name_en VARCHAR(150),
-    category VARCHAR(50) NOT NULL, -- mboga, matunda, nyama, nafaka, viungo
-    price NUMERIC(12, 2) NOT NULL,
-    original_price NUMERIC(12, 2),
-    unit VARCHAR(50) NOT NULL, -- Kilo 1, Fungu, Samaki 1
-    origin VARCHAR(100),
-    in_stock BOOLEAN DEFAULT TRUE,
-    stock_quantity INTEGER DEFAULT 50,
-    rating NUMERIC(2, 1) DEFAULT 5.0,
-    reviews_count INTEGER DEFAULT 0,
-    description_sw TEXT,
-    image_url TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
--- 3. Majedwali ya Wateja (Customers)
-CREATE TABLE IF NOT EXISTS customers (
-    id VARCHAR(32) PRIMARY KEY,
-    full_name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20) UNIQUE NOT NULL,
-    default_zone VARCHAR(100),
-    default_street VARCHAR(200),
-    total_orders INTEGER DEFAULT 0,
-    registered_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
--- 4. Majedwali ya Oda za Wateja (Orders)
-CREATE TABLE IF NOT EXISTS orders (
-    id VARCHAR(32) PRIMARY KEY,
-    customer_id VARCHAR(32) REFERENCES customers(id) ON DELETE SET NULL,
-    customer_name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20) NOT NULL,
-    delivery_zone VARCHAR(100) NOT NULL,
-    street_address TEXT NOT NULL,
-    payment_method VARCHAR(30) NOT NULL, -- mpesa, tigopesa, airtel, halopesa, cash
-    subtotal NUMERIC(12, 2) NOT NULL,
-    delivery_fee NUMERIC(12, 2) DEFAULT 0,
-    total NUMERIC(12, 2) NOT NULL,
-    status VARCHAR(30) DEFAULT 'pending', -- pending, processing, out_for_delivery, delivered, cancelled
-    notes TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
--- 5. Majedwali ya Vipengele vya Oda (Order Items)
-CREATE TABLE IF NOT EXISTS order_items (
-    id VARCHAR(64) PRIMARY KEY,
-    order_id VARCHAR(32) NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
-    product_id VARCHAR(32) REFERENCES products(id) ON DELETE SET NULL,
-    product_name VARCHAR(150) NOT NULL,
-    quantity INTEGER NOT NULL CHECK (quantity > 0),
-    unit_price NUMERIC(12, 2) NOT NULL,
-    total_price NUMERIC(12, 2) NOT NULL
-);
-
--- 6. Indices kwa Ajili ya Kasi ya Juu ya Utafutaji (Performance Indexing)
-CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
-CREATE INDEX IF NOT EXISTS idx_products_in_stock ON products(in_stock);
-CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
-CREATE INDEX IF NOT EXISTS idx_orders_phone ON orders(phone);
-CREATE INDEX IF NOT EXISTS idx_vendors_market ON vendors(market_name);
-
--- 7. Muonekano wa Mauzo na Ripoti (Analytical View)
-CREATE OR REPLACE VIEW view_sokoni_daily_stats AS
-SELECT 
-    DATE(created_at) as sale_date,
-    COUNT(id) as total_orders,
-    SUM(total) as gross_sales_tzs,
-    AVG(total) as average_order_value_tzs
-FROM orders
-WHERE status != 'cancelled'
-GROUP BY DATE(created_at)
-ORDER BY sale_date DESC;
-`;
-    } else {
-      return `-- MySQL Version for Sokoni Mkononi
-CREATE DATABASE IF NOT EXISTS sokoni_mkononi_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE sokoni_mkononi_db;
 
 CREATE TABLE IF NOT EXISTS vendors (
     id VARCHAR(32) PRIMARY KEY,
@@ -289,9 +249,9 @@ CREATE TABLE IF NOT EXISTS vendors (
     category VARCHAR(50) NOT NULL,
     city VARCHAR(50) DEFAULT 'Dar es Salaam',
     subscription_plan VARCHAR(20) DEFAULT 'starter',
-    subscription_price_tzs INT DEFAULT 2000,
+    subscription_price_tzs INTEGER DEFAULT 2000,
     status VARCHAR(20) DEFAULT 'active',
-    registered_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    registered_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS products (
@@ -299,45 +259,32 @@ CREATE TABLE IF NOT EXISTS products (
     name_sw VARCHAR(150) NOT NULL,
     name_en VARCHAR(150),
     category VARCHAR(50) NOT NULL,
-    price DECIMAL(12, 2) NOT NULL,
-    original_price DECIMAL(12, 2),
+    price NUMERIC(12, 2) NOT NULL,
+    original_price NUMERIC(12, 2),
     unit VARCHAR(50) NOT NULL,
     origin VARCHAR(100),
-    in_stock TINYINT(1) DEFAULT 1,
-    stock_quantity INT DEFAULT 50,
-    rating DECIMAL(2, 1) DEFAULT 5.0,
-    reviews_count INT DEFAULT 0,
-    description_sw TEXT,
-    image_url TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    in_stock BOOLEAN DEFAULT TRUE,
+    rating NUMERIC(2, 1) DEFAULT 5.0,
+    reviews_count INTEGER DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS orders (
-    id VARCHAR(32) PRIMARY KEY,
+    order_id VARCHAR(32) PRIMARY KEY,
     customer_name VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     delivery_zone VARCHAR(100) NOT NULL,
     street_address TEXT NOT NULL,
     payment_method VARCHAR(30) NOT NULL,
-    subtotal DECIMAL(12, 2) NOT NULL,
-    delivery_fee DECIMAL(12, 2) DEFAULT 0,
-    total DECIMAL(12, 2) NOT NULL,
+    subtotal NUMERIC(12, 2) NOT NULL,
+    delivery_fee NUMERIC(12, 2) DEFAULT 0,
+    total NUMERIC(12, 2) NOT NULL,
     status VARCHAR(30) DEFAULT 'pending',
     notes TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS order_items (
-    id VARCHAR(64) PRIMARY KEY,
-    order_id VARCHAR(32) NOT NULL,
-    product_id VARCHAR(32),
-    product_name VARCHAR(150) NOT NULL,
-    quantity INT NOT NULL,
-    unit_price DECIMAL(12, 2) NOT NULL,
-    total_price DECIMAL(12, 2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
-);
+CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
+CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
 `;
-    }
   }
 }
