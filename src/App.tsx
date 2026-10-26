@@ -22,7 +22,7 @@ import { DatabaseStudioView } from './components/DatabaseStudioView';
 import { DatabaseEngine } from './db/dbEngine';
 import { DELIVERY_ZONES, DeliveryZone, Product } from './data/products';
 import { CartItem, Language, OrderDetails, PackageTier, Vendor } from './types';
-import { CheckCircle2, ShoppingBag, MessageCircle, Database, LayoutDashboard, Sparkles, Store } from 'lucide-react';
+import { CheckCircle2, ShoppingBag, MessageCircle, Database, LayoutDashboard, Sparkles, Store, RefreshCw } from 'lucide-react';
 
 export default function App() {
   const engine = DatabaseEngine.getInstance();
