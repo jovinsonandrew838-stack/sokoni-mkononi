@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingBag, Search, MapPin, PhoneCall, Globe, X, Store, Sparkles, Download, Layers, LayoutDashboard } from 'lucide-react';
+import { ShoppingBag, Search, MapPin, PhoneCall, Globe, X, Store, Sparkles, Download, Layers, LayoutDashboard, Database } from 'lucide-react';
 import { Language } from '../types';
 import { DELIVERY_ZONES, DeliveryZone } from '../data/products';
 
@@ -173,15 +173,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Admin Dashboard Button */}
+            {/* Database & Admin Dashboard Button */}
             <button
               type="button"
               onClick={onOpenAdminDashboard}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-amber-300 font-bold text-xs border border-stone-700 shadow-xs transition-colors shrink-0 cursor-pointer"
-              title={language === 'sw' ? 'Fungua Dashibodi ya Msimamizi' : 'Open Admin Dashboard'}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-indigo-900 hover:bg-indigo-800 text-white font-bold text-xs border border-indigo-700 shadow-xs transition-colors shrink-0 cursor-pointer"
+              title={language === 'sw' ? 'Fungua Database na Dashibodi' : 'Open Database & Admin'}
             >
-              <LayoutDashboard className="w-3.5 h-3.5" />
-              <span>{language === 'sw' ? 'Dashibodi' : 'Dashboard'}</span>
+              <Database className="w-3.5 h-3.5 text-emerald-400" />
+              <span>{language === 'sw' ? 'Database' : 'Database'}</span>
             </button>
 
             {/* Language Switcher */}
