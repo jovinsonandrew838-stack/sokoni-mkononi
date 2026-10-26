@@ -564,6 +564,21 @@ export default function App() {
                 </div>
               )}
 
+              {/* Floating Database Quick Access Button */}
+              <button
+                type="button"
+                onClick={() => setCurrentView('database')}
+                className="fixed bottom-5 left-5 z-40 bg-indigo-800 hover:bg-indigo-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 border-2 border-indigo-400 font-extrabold text-xs cursor-pointer transition-all hover:scale-105 active:scale-95 shadow-indigo-950/40"
+                title="Bofya hapa kufungua database ya mfumo"
+              >
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <Database className="w-4 h-4 text-emerald-400" />
+                <span>🗄️ Fungua Database</span>
+                <span className="bg-indigo-950 text-indigo-200 px-2 py-0.5 rounded-full text-[10px] font-mono">
+                  {orders.length} Oda
+                </span>
+              </button>
+
               {/* Floating WhatsApp Support Button */}
               <a
                 href="https://wa.me/255704205872?text=Habari%20Sokoni%20Mkononi,%20nahitaji%20msaada%20wa%20kuweka%20oda"
