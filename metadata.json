@@ -1,0 +1,6 @@
+{
+  "name": "Sokoni Mkononi - Database Engine",
+  "description": "Mfumo kamili wa hifadhidata ya kidijitali ya Sokoni Mkononi: Majedwali ya Bidhaa, Oda, Wafanyabiashara wa Masoko, SQL Schema, na Usimamizi wa Data.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
